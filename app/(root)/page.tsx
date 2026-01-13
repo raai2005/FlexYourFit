@@ -1,15 +1,21 @@
 import Link from "next/link";
+import Image from "next/image";
+import heroAnimation from '../../public/assets/hero-animation.json';
+import LottieAnim from "../components/LottieAnim";
+// This acts as a placeholder for the single replace call strategy if I was using that.
+// But I need to use multi_replace.
+// Canceling this thought process to switch to multi_replace.
 
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800 bg-zinc-950">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-zinc-900"
+                className="w-5 h-5 text-white"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -25,13 +31,13 @@ const HomePage = () => {
           <div className="flex items-center gap-4">
             <Link
               href="/sign-in"
-              className="text-sm text-zinc-400 hover:text-white transition-colors"
+              className="text-sm text-zinc-400 hover:text-white transition-colors font-medium"
             >
               Sign in
             </Link>
             <Link
               href="/sign-up"
-              className="text-sm px-4 py-2 rounded-lg bg-white text-zinc-900 font-medium hover:bg-zinc-200 transition-colors"
+              className="text-sm px-4 py-2 rounded-lg bg-white text-zinc-950 font-bold hover:bg-zinc-200 transition-colors"
             >
               Get Started
             </Link>
@@ -40,48 +46,54 @@ const HomePage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 text-sm mb-8">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            AI-Powered Mock Interviews
+      <section className="relative pt-20 pb-10 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+          
+          {/* Left Content */}
+          <div className="flex-1 text-left z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900 text-zinc-400 text-sm mb-8">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              AI-Powered Mock Interviews
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              Ace Your Next
+              <br />
+              <span className="text-emerald-500">Technical Interview</span>
+            </h1>
+
+            <p className="text-lg text-zinc-400 max-w-xl mb-10 leading-relaxed">
+              Practice with AI-powered mock interviews tailored to your target
+              companies. Get instant feedback and improve your skills.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-start gap-4">
+              <Link
+                href="/sign-up"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-zinc-950 font-bold text-lg hover:bg-zinc-200 transition-all duration-200"
+              >
+                Start Practicing Free
+              </Link>
+              <Link
+                href="#features"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl border border-zinc-800 text-zinc-300 font-medium hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-200"
+              >
+                See How It Works
+              </Link>
+            </div>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Ace Your Next
-            <br />
-            <span className="text-zinc-500">Technical Interview</span>
-          </h1>
-
-          <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10">
-            Practice with AI-powered mock interviews tailored to your target
-            companies. Get instant feedback and improve your skills.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/sign-up"
-              className="w-full sm:w-auto px-8 py-3 rounded-lg bg-white text-zinc-900 font-semibold hover:bg-zinc-200 transition-all duration-200"
-            >
-              Start Practicing Free
-            </Link>
-            <Link
-              href="#features"
-              className="w-full sm:w-auto px-8 py-3 rounded-lg border border-zinc-800 text-zinc-300 font-medium hover:bg-zinc-900/50 hover:border-zinc-700 transition-all duration-200"
-            >
-              See How It Works
-            </Link>
+          {/* Right Visual */}
+          <div className="flex-1 relative w-full flex justify-center md:justify-end">
+             <div className="relative w-full max-w-lg flex items-center justify-center animate-float hover:scale-105 transition-transform duration-500">
+                <LottieAnim animationData={heroAnimation} className="w-full h-full" />
+             </div>
           </div>
         </div>
-
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-zinc-800/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-10 w-96 h-96 bg-zinc-800/10 rounded-full blur-3xl"></div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 border-y border-zinc-800/50">
+      <section className="py-20 bg-zinc-900 border-y border-zinc-800">
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -91,10 +103,10 @@ const HomePage = () => {
               { value: "500+", label: "Companies" },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-1">
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-zinc-500">{stat.label}</div>
+                <div className="text-sm font-medium text-zinc-500 uppercase tracking-wider">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -102,19 +114,19 @@ const HomePage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 px-6">
+      <section id="features" className="py-32 px-6 bg-zinc-950">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Everything You Need to Succeed
             </h2>
-            <p className="text-zinc-400 max-w-xl mx-auto">
+            <p className="text-zinc-400 max-w-xl mx-auto text-lg">
               Our platform provides all the tools you need to prepare for
-              technical interviews.
+              technical interviews with confidence.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: (
@@ -179,15 +191,15 @@ const HomePage = () => {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="group p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/50 hover:border-zinc-700 transition-all duration-300"
+                className="group p-8 rounded-2xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 transition-all duration-300"
               >
-                <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:bg-zinc-700 transition-all duration-300 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:bg-emerald-500 transition-all duration-300 mb-6">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-xl font-bold text-white mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-zinc-400 text-sm">{feature.description}</p>
+                <p className="text-zinc-400 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -195,33 +207,52 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="p-12 rounded-3xl border border-zinc-800 bg-zinc-900/30">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to Start Practicing?
-            </h2>
-            <p className="text-zinc-400 mb-8">
-              Join thousands of developers who have improved their interview
-              skills with FlexYourFit.
-            </p>
-            <Link
-              href="/sign-up"
-              className="inline-flex px-8 py-3 rounded-lg bg-white text-zinc-900 font-semibold hover:bg-zinc-200 transition-all duration-200"
-            >
-              Get Started for Free
-            </Link>
+      <section className="py-24 px-6 bg-zinc-950">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 p-8 md:p-12">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+              <div className="max-w-xl text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  Ready to Ace Your Next Interview?
+                </h2>
+                <p className="text-zinc-400 mb-8 text-lg leading-relaxed">
+                  Join thousands of developers who have improved their interview
+                  skills with FlexYourFit. Get started today.
+                </p>
+                <Link
+                  href="/sign-up"
+                  className="inline-flex px-8 py-4 rounded-xl bg-white text-zinc-950 font-bold text-lg hover:bg-zinc-200 transition-all duration-200"
+                >
+                  Get Started for Free
+                </Link>
+              </div>
+              
+              <div 
+                className="hidden md:block relative w-96 h-96 -my-12 -mr-12"
+                 style={{ 
+                  maskImage: 'linear-gradient(to right, transparent, black 50%)',
+                  WebkitMaskImage: 'linear-gradient(to right, transparent, black 50%)'
+                }}
+              >
+                 <Image
+                    src="/assets/hero-interview.png"
+                    alt="AI Interview Companion"
+                    fill
+                    className="object-contain"
+                 />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800/50 py-12 px-6">
+      <footer className="border-t border-zinc-800 bg-zinc-950 py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-white flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
               <svg
-                className="w-4 h-4 text-zinc-900"
+                className="w-5 h-5 text-zinc-400"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -229,7 +260,7 @@ const HomePage = () => {
                 <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
               </svg>
             </div>
-            <span className="text-sm text-zinc-400">FlexYourFit</span>
+            <span className="text-sm font-semibold text-zinc-300">FlexYourFit</span>
           </div>
           <div className="text-sm text-zinc-500">
             © 2026 FlexYourFit. All rights reserved.
