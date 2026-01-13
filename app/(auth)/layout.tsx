@@ -24,7 +24,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Footer */}
       <footer className="fixed bottom-4 left-0 right-0 text-center text-xs text-zinc-600">
-        © 2026 Study Companion. All rights reserved.
+        © 2026 FlexYourFit. All rights reserved.
       </footer>
     </div>
   );

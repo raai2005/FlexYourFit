@@ -18,7 +18,7 @@ const HomePage = () => {
               </svg>
             </div>
             <span className="text-lg font-semibold text-white">
-              Study Companion
+              FlexYourFit
             </span>
           </div>
 
@@ -203,7 +203,7 @@ const HomePage = () => {
             </h2>
             <p className="text-zinc-400 mb-8">
               Join thousands of developers who have improved their interview
-              skills with Study Companion.
+              skills with FlexYourFit.
             </p>
             <Link
               href="/sign-up"
@@ -229,10 +229,10 @@ const HomePage = () => {
                 <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
               </svg>
             </div>
-            <span className="text-sm text-zinc-400">Study Companion</span>
+            <span className="text-sm text-zinc-400">FlexYourFit</span>
           </div>
           <div className="text-sm text-zinc-500">
-            © 2026 Study Companion. All rights reserved.
+            © 2026 FlexYourFit. All rights reserved.
           </div>
         </div>
       </footer>
