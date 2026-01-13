@@ -1,11 +1,11 @@
-import React from "react";
+import AuthForm from "@/app/components/authform";
 
-const SignUpPage = ({children}: {children: React.ReactNode}) => {
+const SignUpPage = () => {
   return (
     <div>
-      {children}
+      <AuthForm type="sign-up" />
     </div>
   )
 }
 
-export default SignUpPage;
+export default SignUpPage;  

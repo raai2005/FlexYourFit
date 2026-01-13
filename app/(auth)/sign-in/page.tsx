@@ -1,9 +1,9 @@
-import React from "react";
+import AuthForm from "@/app/components/authform";
 
-const SignInPage = ({children}: {children: React.ReactNode}) => {
+const SignInPage = () => {
   return (
     <div>
-      {children}
+      <AuthForm type="sign-in" />
     </div>
   )
 }

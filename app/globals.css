@@ -121,3 +121,50 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Auth Layout Styles */
+.auth-layout {
+  @apply min-h-screen bg-zinc-950 relative;
+}
+
+.auth-card {
+  @apply w-full max-w-3xl p-12 rounded-3xl;
+  @apply bg-zinc-900/60 border border-zinc-800;
+  @apply backdrop-blur-xl;
+  @apply transition-all duration-300 ease-out;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05),
+              0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  transform: translateY(0);
+}
+
+.auth-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08),
+              0 30px 60px -20px rgba(0, 0, 0, 0.7);
+}
+
+.auth-input {
+  @apply h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder-zinc-500;
+  @apply focus:border-zinc-600 focus:ring-zinc-600/20;
+  @apply transition-all duration-200;
+}
+
+.auth-input:hover {
+  @apply border-zinc-700;
+}
+
+/* Animation */
+.animation {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
