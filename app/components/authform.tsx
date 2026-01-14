@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "@/Firebase/client";
 import { SignUp, SignIn } from "@/lib/actions/auth.action";
 import { useRouter } from "next/navigation";
@@ -60,6 +60,10 @@ const isSignIn = type === "sign-in";
           email,
           password
         );
+
+        await updateProfile(userCredential.user, {
+          displayName: `${firstName} ${lastName}`,
+        });
 
         const res = await SignUp({
            uid: userCredential.user.uid,

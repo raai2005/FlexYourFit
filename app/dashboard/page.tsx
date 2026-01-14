@@ -6,6 +6,9 @@ import Image from "next/image";
 import DashboardNavbar from "../components/DashboardNavbar";
 import InterviewCard from "../components/InterviewCard";
 import InterviewModal from "../components/InterviewModal";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/Firebase/client";
+import { useRouter } from "next/navigation";
 
 interface Interview {
   id: string;
@@ -17,57 +20,27 @@ interface Interview {
   syllabus: string[];
 }
 
-const INTERVIEWS: Interview[] = [
-  {
-    id: "1",
-    title: "Frontend Developer",
-    description: "Master React, closures, and browser APIs. Perfect for mid-level roles.",
-    category: "Engineering",
-    difficulty: "Medium",
-    duration: "45 min",
-    syllabus: [
-      "React Hooks & virtual DOM",
-      "JavaScript Closures & Event Loop",
-      "CSS Flexbox & Grid",
-      "Web Performance Optimization",
-      "State Management (Redux/Context)"
-    ]
-  },
-  {
-    id: "2",
-    title: "System Design",
-    description: "Design scalable systems like Twitter or Uber. Essential for senior roles.",
-    category: "Architecture",
-    difficulty: "Hard",
-    duration: "60 min",
-    syllabus: [
-      "Load Balancing & Caching",
-      "Database Sharding & Replication",
-      "Microservices vs Monolith",
-      "API Design (REST vs GraphQL)",
-      "System Scalability Patterns"
-    ]
-  },
-  {
-    id: "3",
-    title: "Behavioral",
-    description: "Learn to answer 'Tell me about a time...' questions with the STAR method.",
-    category: "HR Round",
-    difficulty: "Easy",
-    duration: "30 min",
-    syllabus: [
-      "STAR Method Application",
-      "Conflict Resolution",
-      "Leadership & Teamwork",
-      "Handling Failure",
-      "Project Management Skills"
-    ]
-  }
-];
+const INTERVIEWS: Interview[] = [];
 
 const DashboardPage = () => {
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        router.push("/sign-in");
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   const handleOpenModal = (interview: Interview) => {
     setSelectedInterview(interview);
@@ -89,7 +62,7 @@ const DashboardPage = () => {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">
-                Welcome back, John
+                Welcome back, {loading ? "..." : user?.displayName?.split(" ")[0] || "User"}
               </h1>
               <p className="text-zinc-400">
                 Ready to ace your next technical interview?
@@ -98,11 +71,11 @@ const DashboardPage = () => {
             
             <div className="flex items-center gap-4">
                <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center">
-                  <div className="text-2xl font-bold text-white">5</div>
+                  <div className="text-2xl font-bold text-white">0</div>
                   <div className="text-xs text-zinc-500">Completed</div>
                </div>
                <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center">
-                  <div className="text-2xl font-bold text-emerald-500">92%</div>
+                  <div className="text-2xl font-bold text-emerald-500">0%</div>
                   <div className="text-xs text-zinc-500">Avg Score</div>
                </div>
             </div>

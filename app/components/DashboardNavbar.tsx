@@ -1,7 +1,28 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "@/Firebase/client";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const DashboardNavbar = () => {
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+      await signOut(auth);
+      router.push("/sign-in");
+  }
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -40,11 +61,15 @@ const DashboardNavbar = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 hover:border-zinc-700 transition-all">
+          <button onClick={handleSignOut} className="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 hover:border-zinc-700 transition-all">
             <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs font-bold text-white">
-              JD
+              {user?.displayName 
+                ? user.displayName.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2) 
+                : "U"}
             </div>
-            <span className="text-sm text-zinc-300">John Doe</span>
+            <span className="text-sm text-zinc-300">
+                {user?.displayName || "User"}
+            </span>
           </button>
         </div>
       </div>
