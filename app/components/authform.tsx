@@ -4,20 +4,83 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/Firebase/client";
+import { SignUp, SignIn } from "@/lib/actions/auth.action";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface AuthFormProps {
   type: "sign-in" | "sign-up";
 }
 
 const AuthForm = ({ type }: AuthFormProps) => {
-  const isSignIn = type === "sign-in";
+const isSignIn = type === "sign-in";
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    // Add your auth logic here
-    setTimeout(() => setIsLoading(false), 1500);
+
+    try {
+      if (isSignIn) {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const idToken = await userCredential.user.getIdToken();
+
+        const res = await SignIn({
+          email,
+          idToken,
+        });
+
+        if (res.success) {
+          toast.success("Signed in successfully");
+          router.push("/dashboard");
+        } else {
+          toast.error(res.message);
+        }
+      } else {
+        if (password !== confirmPassword) {
+          toast.error("Passwords do not match");
+          setIsLoading(false);
+          return;
+        }
+
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const res = await SignUp({
+           uid: userCredential.user.uid,
+           email,
+           name: `${firstName} ${lastName}`,
+           password
+        }); 
+
+        if (res?.success === false) {
+             toast.error(res.message);
+        } else {
+            toast.success("Account created successfully");
+            router.push("/dashboard");
+        }
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -66,6 +129,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 placeholder="John"
                 className="auth-input"
                 required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -77,6 +142,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 placeholder="Doe"
                 className="auth-input"
                 required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </div>
           </div>
@@ -89,6 +156,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
             placeholder="you@example.com"
             className="auth-input"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -99,6 +168,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
             placeholder="••••••••"
             className="auth-input"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
@@ -112,6 +183,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
               placeholder="••••••••"
               className="auth-input"
               required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
         )}
