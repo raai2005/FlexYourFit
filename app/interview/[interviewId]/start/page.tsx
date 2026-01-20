@@ -31,6 +31,12 @@ const InterviewSetupPage = () => {
     };
   }, [stream]);
 
+  useEffect(() => {
+    if (stream && videoRef.current) {
+        videoRef.current.srcObject = stream;
+    }
+  }, [stream, hasPermissions]);
+
   const enableMedia = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -40,10 +46,6 @@ const InterviewSetupPage = () => {
       setStream(mediaStream);
       setHasPermissions(true);
       setError(null);
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
     } catch (err) {
       console.error("Error accessing media devices:", err);
       setHasPermissions(false);

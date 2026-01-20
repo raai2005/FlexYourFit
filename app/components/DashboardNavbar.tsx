@@ -3,12 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/Firebase/client";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+  import { useRouter, usePathname } from "next/navigation";
+  import Link from "next/link";
 
 const DashboardNavbar = () => {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -43,18 +44,21 @@ const DashboardNavbar = () => {
         </div>
 
         <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="text-sm text-white font-medium">
+          <Link 
+            href="/dashboard" 
+            className={`text-sm transition-colors ${pathname === '/dashboard' ? 'text-white font-bold' : 'text-zinc-400 hover:text-white'}`}
+          >
             Dashboard
           </Link>
           <Link
             href="/interviews"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            className={`text-sm transition-colors ${pathname === '/interviews' ? 'text-white font-bold' : 'text-zinc-400 hover:text-white'}`}
           >
             Interviews
           </Link>
           <Link
             href="/questions"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            className={`text-sm transition-colors ${pathname === '/questions' ? 'text-white font-bold' : 'text-zinc-400 hover:text-white'}`}
           >
             Questions
           </Link>
