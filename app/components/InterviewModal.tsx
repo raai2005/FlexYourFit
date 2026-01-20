@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 interface Interview {
+  id: string;
   title: string;
   description: string;
   category: string;
@@ -127,7 +128,7 @@ const InterviewModal = ({ isOpen, onClose, interview }: InterviewModalProps) => 
             Cancel
           </button>
           <Link
-            href="/interview/start"
+            href={`/interview/${interview.id}/start`}
             className="px-6 py-2.5 rounded-lg bg-white text-zinc-900 font-semibold hover:bg-zinc-200 transition-colors flex items-center gap-2"
           >
             Start Interview

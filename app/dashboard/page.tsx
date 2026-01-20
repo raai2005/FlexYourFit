@@ -20,7 +20,35 @@ interface Interview {
   syllabus: string[];
 }
 
-const INTERVIEWS: Interview[] = [];
+const INTERVIEWS: Interview[] = [
+  {
+    id: "mock-1",
+    title: "Frontend Developer",
+    description: "Prepare for a generic frontend developer interview covering React, HTML/CSS, and JavaScript fundamentals.",
+    category: "Engineering",
+    difficulty: "Medium",
+    duration: "45 min",
+    syllabus: ["React Hooks", "CSS Grid/Flexbox", "ES6+ Features", "Performance Optimization"],
+  },
+  {
+    id: "mock-2",
+    title: "System Design",
+    description: "Design scalable systems. Topics include load balancing, database sharding, and caching strategies.",
+    category: "Architecture",
+    difficulty: "Hard",
+    duration: "60 min",
+    syllabus: ["Load Balancing", "Caching", "Database Sharding", "API Design"],
+  },
+  {
+    id: "mock-3",
+    title: "Behavioral Interview",
+    description: "Common behavioral questions using the STAR method. Great for all roles.",
+    category: "HR",
+    difficulty: "Easy",
+    duration: "30 min",
+    syllabus: ["Conflict Resolution", "Leadership", "Teamwork", "Career Goals"],
+  }
+];
 
 const DashboardPage = () => {
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);

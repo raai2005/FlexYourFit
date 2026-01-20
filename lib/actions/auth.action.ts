@@ -64,4 +64,32 @@ export async function SignIn(params: SignInParams) {
             message: "Failed to sign in"
         }
     }
+
+}
+
+export async function SyncUser(params: { uid: string; email: string; name: string }) {
+    const { uid, email, name } = params;
+
+    try {
+        const userRecord = await db.collection('users').doc(uid).get();
+
+        if (!userRecord.exists) {
+            await db.collection('users').doc(uid).set({
+                name,
+                email,
+                createdAt: new Date().toISOString(),
+            });
+        }
+
+        return {
+            success: true,
+            message: "User synced successfully"
+        }
+    } catch (e) {
+        console.error("Error syncing user", e);
+        return {
+            success: false,
+            message: "Failed to sync user"
+        }
+    }
 }
