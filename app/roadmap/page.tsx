@@ -5,56 +5,34 @@ import DashboardNavbar from "../components/DashboardNavbar";
 import { Loader2, Sparkles, Map, ChevronRight, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
+import { generateRoadmap, RoadmapResponse } from "@/lib/actions/gemini";
+
 const RoadmapPage = () => {
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
-  const [roadmap, setRoadmap] = useState<any>(null);
+  const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
 
-  // Mock generation function (replace with AI action later)
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!role.trim()) return;
 
     setLoading(true);
+    setRoadmap(null);
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Mock Response
-    const mockRoadmap = {
-        role: role,
-        steps: [
-            {
-                title: "Fundamentals",
-                description: "Master the core concepts required for " + role,
-                topics: ["Core Syntax", "Data Structures", "Basic Algorithms"]
-            },
-            {
-                title: "Advanced Concepts",
-                description: "Deep dive into complex topics and patterns",
-                topics: ["System Design", "Scalability", "Security Best Practices"]
-            },
-            {
-                title: "Frameworks & Tools",
-                description: "Essential tools used in the industry",
-                topics: ["Popular Frameworks", "Testing Libraries", "CI/CD Pipelines"]
-            },
-            {
-                title: "Project Portfolio",
-                description: "Build real-world projects to showcase skills",
-                topics: ["Full Stack App", "Open Source Contribution", "API Integration"]
-            },
-            {
-                title: "Interview Prep",
-                description: "Final polish before the big day",
-                topics: ["Mock Interviews", "Behavioral Questions", "Resume Review"]
-            }
-        ]
-    };
-
-    setRoadmap(mockRoadmap);
-    setLoading(false);
-    toast.success("Roadmap generated successfully!");
+    try {
+        const result = await generateRoadmap(role);
+        
+        if (result.success && result.data) {
+            setRoadmap(result.data);
+            toast.success("Roadmap generated successfully!");
+        } else {
+            toast.error(result.message || "Failed to generate roadmap.");
+        }
+    } catch (error) {
+        toast.error("Something went wrong. Please try again.");
+    } finally {
+        setLoading(false);
+    }
   };
 
   return (
