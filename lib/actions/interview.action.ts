@@ -7,6 +7,7 @@ export interface FireStoreInterview {
   title: string;
   description: string;
   category: string;
+  type: "role" | "skill";
   difficulty: "Easy" | "Medium" | "Hard";
   duration: string;
   syllabus: string[];
@@ -30,6 +31,24 @@ export async function getInterviews() {
   } catch (error) {
     console.error("Error fetching interviews:", error);
     return [];
+  }
+}
+
+export async function getInterviewById(id: string): Promise<FireStoreInterview | null> {
+  try {
+    const docRef = await db.collection("interviews").doc(id).get();
+    
+    if (!docRef.exists) {
+      return null;
+    }
+
+    return {
+      id: docRef.id,
+      ...docRef.data(),
+    } as FireStoreInterview;
+  } catch (error) {
+    console.error("Error fetching interview by ID:", error);
+    return null;
   }
 }
 

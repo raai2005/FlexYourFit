@@ -74,12 +74,17 @@
               </div>
             </section>
   
-            {/* Featured Interviews */}
+            {/* Role Based Interviews */}
             <section>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white">
-                  Featured Interviews
-                </h2>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">Role Based</h2>
+                </div>
                 <Link
                   href="/interviews"
                   className="text-sm text-emerald-500 hover:text-emerald-400 font-medium"
@@ -88,11 +93,40 @@
                 </Link>
               </div>
   
-              {interviews.length > 0 ? (
-                <InterviewSection interviews={interviews.slice(0, 3)} />
+              {interviews.filter(i => i.type === "role").length > 0 ? (
+                <InterviewSection interviews={interviews.filter(i => i.type === "role").slice(0, 3)} />
               ) : (
                 <div className="text-zinc-500 text-sm py-8 text-center bg-zinc-900/50 rounded-xl border border-zinc-800 border-dashed">
-                    No interviews available at the moment.
+                    No role-based interviews available yet.
+                </div>
+              )}
+            </section>
+
+            {/* Skill Based Interviews */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">Skill Based</h2>
+                </div>
+                <Link
+                  href="/interviews"
+                  className="text-sm text-emerald-500 hover:text-emerald-400 font-medium"
+                >
+                  View all
+                </Link>
+              </div>
+  
+              {interviews.filter(i => i.type === "skill").length > 0 ? (
+                <InterviewSection interviews={interviews.filter(i => i.type === "skill").slice(0, 3)} />
+              ) : (
+                <div className="text-zinc-500 text-sm py-8 text-center bg-zinc-900/50 rounded-xl border border-zinc-800 border-dashed">
+                    No skill-based interviews available yet.
                 </div>
               )}
             </section>

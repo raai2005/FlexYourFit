@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { db, auth } from "@/Firebase/client";
-import { collection, addDoc } from "firebase/firestore";
+import { auth } from "@/Firebase/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { addInterview } from "@/lib/actions/admin";
 
 interface NewInterview {
   title: string;
   description: string;
   category: string;
+  type: "role" | "skill";
   difficulty: "Easy" | "Medium" | "Hard";
   duration: string;
   syllabus: string; // Temporarily string for input, converted to array on submit
@@ -19,11 +20,14 @@ interface NewInterview {
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Import useRouter
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [addedInterviewTitle, setAddedInterviewTitle] = useState("");
+  const router = useRouter();
   const [formData, setFormData] = useState<NewInterview>({
     title: "",
     description: "",
     category: "",
+    type: "role",
     difficulty: "Medium",
     duration: "30 Min",
     syllabus: "",
@@ -57,23 +61,31 @@ const AdminDashboard = () => {
     try {
       const syllabusArray = formData.syllabus.split(",").map((s) => s.trim()).filter((s) => s.length > 0);
 
-      const interviewData = {
-        ...formData,
+      const result = await addInterview({
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        type: formData.type,
+        difficulty: formData.difficulty,
+        duration: formData.duration,
         syllabus: syllabusArray,
-        createdAt: new Date(),
-      };
-
-      await addDoc(collection(db, "interviews"), interviewData);
-      
-      toast.success("Interview added successfully!");
-      setFormData({
-        title: "",
-        description: "",
-        category: "",
-        difficulty: "Medium",
-        duration: "30 Min",
-        syllabus: "",
       });
+
+      if (result.success) {
+        setAddedInterviewTitle(formData.title);
+        setShowSuccessModal(true);
+        setFormData({
+          title: "",
+          description: "",
+          category: "",
+          type: "role",
+          difficulty: "Medium",
+          duration: "30 Min",
+          syllabus: "",
+        });
+      } else {
+        toast.error(result.message || "Failed to add interview");
+      }
     } catch (error: any) {
       console.error("Error adding interview:", error);
       toast.error("Failed to add interview");
@@ -83,7 +95,48 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="py-8">
+    <>
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 max-w-md w-full mx-4 text-center animate-in zoom-in-95 duration-300">
+            {/* Confetti/Success Animation */}
+            <div className="relative w-24 h-24 mx-auto mb-6">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 animate-pulse"></div>
+              <div className="absolute inset-2 rounded-full bg-zinc-900 flex items-center justify-center">
+                <svg className="w-12 h-12 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              {/* Decorative sparkles */}
+              <div className="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
+              <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-pink-400 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
+              <div className="absolute top-0 -left-3 w-2 h-2 bg-blue-400 rounded-full animate-ping" style={{animationDelay: '0.4s'}}></div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-2">🎉 Interview Added!</h2>
+            <p className="text-zinc-400 mb-2">Your interview has been successfully created</p>
+            <p className="text-emerald-400 font-semibold text-lg mb-6">"{addedInterviewTitle}"</p>
+            
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-medium rounded-xl transition-colors"
+              >
+                Add Another
+              </button>
+              <button
+                onClick={() => router.push('/interviews')}
+                className="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium rounded-xl transition-all"
+              >
+                View Interviews
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
@@ -129,6 +182,18 @@ const AdminDashboard = () => {
                     placeholder="e.g. Engineering"
                     required
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-1">Type</label>
+                  <select
+                    name="type"
+                    value={formData.type}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-emerald-500 transition-colors appearance-none"
+                  >
+                    <option value="role">Role Based</option>
+                    <option value="skill">Skill Based</option>
+                  </select>
                 </div>
               </div>
 
@@ -217,7 +282,8 @@ const AdminDashboard = () => {
            </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
