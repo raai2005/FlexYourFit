@@ -60,7 +60,7 @@ const InterviewSetupPage = () => {
         // Navigate to the actual interview session (dashboard for now or a new page)
         // For now, we remain here or go to a placeholder
         // router.push(`/interview/${params.interviewId}/session`); // Future
-        alert("Interview Session Starting... (This would navigate to the interview)");
+        router.push(`/interview/${params.interviewId}/session`); 
     }
   };
 
