@@ -4,6 +4,7 @@
   import Image from "next/image";
   import DashboardNavbar from "../components/DashboardNavbar";
   import InterviewSection from "../components/InterviewSection";
+  import UserStats from "../components/UserStats";
   import { getInterviews } from "@/lib/actions/interview.action";
 
   const DashboardPage = async () => {
@@ -28,14 +29,7 @@
               </div>
               
               <div className="flex items-center gap-4">
-                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center">
-                    <div className="text-2xl font-bold text-white">0</div>
-                    <div className="text-xs text-zinc-500">Completed</div>
-                 </div>
-                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center">
-                    <div className="text-2xl font-bold text-emerald-500">0%</div>
-                    <div className="text-xs text-zinc-500">Avg Score</div>
-                 </div>
+                 <UserStats />
               </div>
             </div>
   

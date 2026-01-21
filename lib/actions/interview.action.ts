@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/Firebase/admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 export interface FireStoreInterview {
   id: string;
@@ -14,6 +15,7 @@ export interface FireStoreInterview {
   createdAt: string;
   usageCount: number;
 }
+// ... (rest of file)
 
 export async function getInterviews() {
   try {
@@ -98,4 +100,45 @@ export async function seedInterviews() {
         console.error("Error seeding interviews:", error);
         return { success: false, message: "Failed to seed interviews" };  
       }
+}
+
+export async function trackInterviewStart(interviewId: string, userId: string) {
+    try {
+        const batch = db.batch();
+        
+        // 1. Increment Interview Usage Count
+        const interviewRef = db.collection("interviews").doc(interviewId);
+        batch.update(interviewRef, {
+            usageCount: FieldValue.increment(1)
+        });
+
+        // 2. Increment User Completed Count (and potentially store session history later)
+        if (userId) {
+            const userRef = db.collection("users").doc(userId);
+            // using set with merge to ensure doc exists
+            batch.set(userRef, { 
+                completedInterviews: FieldValue.increment(1),
+                lastActiveAt: new Date().toISOString()
+            }, { merge: true });
+        }
+
+        await batch.commit();
+        return { success: true };
+    } catch (error) {
+        console.error("Error tracking interview start:", error);
+        return { success: false };
+    }
+}
+
+export async function getUserStats(userId: string) {
+    try {
+        const userDoc = await db.collection("users").doc(userId).get();
+        if (!userDoc.exists) {
+            return { completedInterviews: 0 };
+        }
+        return userDoc.data() as { completedInterviews: number };
+    } catch (error) {
+        console.error("Error fetching user stats:", error);
+        return { completedInterviews: 0 };
+    }
 }

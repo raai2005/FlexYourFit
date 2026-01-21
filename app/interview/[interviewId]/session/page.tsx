@@ -4,10 +4,11 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, Mic, MicOff, PhoneOff, Volume2, User } from "lucide-react";
 import Vapi from "@vapi-ai/web";
-import { getInterviewById } from "@/lib/actions/interview.action";
+import { getInterviewById, trackInterviewStart } from "@/lib/actions/interview.action";
 import { FireStoreInterview } from "@/lib/actions/interview.action";
 import DashboardNavbar from "@/app/components/DashboardNavbar";
 import { toast } from "sonner";
+import { auth } from "@/Firebase/client";
 
 // Initialize Vapi with Public Key from env
 const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
@@ -89,17 +90,40 @@ const InterviewSessionPage = () => {
     setCallStatus("connecting");
 
     try {
+      // Construct a robust system prompt/context
+      const systemInstruction = `
+        You are an expert technical interviewer conducting a ${interview.difficulty} level interview for the role of ${interview.title}.
+        
+        Job Description: ${interview.description}
+        
+        Focus Topics (Syllabus): ${interview.syllabus.join(", ")}
+        
+        Your Goal:
+        1. Start by briefly introducing yourself as the AI interviewer.
+        2. Ask 3-4 distinct technical questions based on the Syllabus and Job Description.
+        3. Evaluate the candidate's answers. If they cover the topic well, move to the next. If they miss key points, ask a tailored follow-up.
+        4. Keep the conversation professional but encouraging.
+        5. IMPORTANT: After you have asked your questions (approx 10-15 mins of conversation) or if the candidate indicates they are done, YOU MUST CONCLUDE the interview.
+        6. To conclude, say: "Thank you for your time. That concludes our interview session." and stop asking questions.
+      `.trim();
+
       // Start the call with the specific Assistant ID and injected variables
       await vapi.start(process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID!, {
         variableValues: {
           jobRole: interview.title,
           techStack: interview.syllabus.join(", "),
-          questions:
-            (interview as any).questions?.join("\n") ||
-            "No specific questions provided.",
+          // We hijack the 'questions' variable to pass our full prompt since specific questions might be missing
+          questions: systemInstruction,
         },
       });
       setCallStatus("active");
+      
+      // Track usage
+      if (interview.id) {
+          const userId = auth.currentUser?.uid || "";
+          trackInterviewStart(interview.id, userId);
+      }
+
     } catch (error) {
       console.error("Error starting Vapi call:", error);
       toast.error("Failed to start AI Interviewer");
@@ -111,7 +135,10 @@ const InterviewSessionPage = () => {
   useEffect(() => {
     const onCallEnd = () => {
       setCallStatus("ended");
-      toast.success("Interview ended");
+      // Only show success if we were actually active/connecting
+      // But since we can't easily check previous state in this closure without ref, 
+      // strict "ended" state is enough.
+      toast("Interview Session Ended");
     };
 
     const onSpeechStart = () => {
@@ -124,6 +151,7 @@ const InterviewSessionPage = () => {
 
     const onError = (e: any) => {
       console.error("Vapi Error:", e);
+      // Don't auto-end on error, let it degrade or user end it, unless critical
     };
 
     vapi.on("call-end", onCallEnd);
@@ -133,11 +161,9 @@ const InterviewSessionPage = () => {
 
     return () => {
       vapi.removeAllListeners();
-      if (callStatus === "active" || callStatus === "connecting") {
-        vapi.stop();
-      }
+      vapi.stop();
     };
-  }, [callStatus]);
+  }, []); // Run only on mount/unmount
 
   const toggleMute = () => {
     const newMutedState = !isMuted;
