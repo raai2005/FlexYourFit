@@ -30,6 +30,12 @@ const HomePage = () => {
 
           <div className="flex items-center gap-4">
             <Link
+              href="/roadmap"
+              className="text-sm text-zinc-400 hover:text-white transition-colors font-medium"
+            >
+              Roadmap
+            </Link>
+            <Link
               href="/sign-in"
               className="text-sm text-zinc-400 hover:text-white transition-colors font-medium"
             >

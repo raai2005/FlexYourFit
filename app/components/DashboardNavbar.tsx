@@ -57,10 +57,10 @@ const DashboardNavbar = () => {
             Interviews
           </Link>
           <Link
-            href="/questions"
-            className={`text-sm transition-colors ${pathname === '/questions' ? 'text-white font-bold' : 'text-zinc-400 hover:text-white'}`}
+            href="/roadmap"
+            className={`text-sm transition-colors ${pathname === '/roadmap' ? 'text-white font-bold' : 'text-zinc-400 hover:text-white'}`}
           >
-            Questions
+            Roadmap
           </Link>
         </div>
 
