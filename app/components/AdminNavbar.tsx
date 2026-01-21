@@ -3,13 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/Firebase/client";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { BarChart3, LayoutGrid, Plus } from "lucide-react";
 
 const AdminNavbar = () => {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentTab = searchParams.get("tab") || "dashboard";
 
   useEffect(() => {
     // Check on mount and when pathname changes (e.g. after login/logout)
@@ -18,10 +20,6 @@ const AdminNavbar = () => {
         if(isAdmin === "true"){
             setUser({ displayName: "Admin" });
         } else {
-             // If not admin, check firebase
-             // Since onAuthStateChanged is async, we might rely on it separately
-             // But valid admin check is immediate
-             // If we just logged out, isAdmin is null, so we set user null if no firebase user
              if(!auth.currentUser) {
                  setUser(null);
              }
@@ -37,17 +35,35 @@ const AdminNavbar = () => {
       }
     });
     return () => unsubscribe();
-  }, [pathname]);
+  }, []);
 
   const handleSignOut = async () => {
       localStorage.removeItem("isAdmin");
       await signOut(auth);
       router.push("/admin/login");
   }
+
+  const NavItem = ({ tab, label, icon: Icon }: { tab: string; label: string; icon: any }) => {
+      const isActive = currentTab === tab;
+      return (
+        <Link 
+            href={`/admin/dashboard?tab=${tab}`} 
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                isActive 
+                ? "bg-zinc-800 text-white shadow-sm ring-1 ring-zinc-700" 
+                : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
+            }`}
+        >
+            <Icon className={`w-4 h-4 ${isActive ? "text-emerald-400" : ""}`} />
+            {label}
+        </Link>
+      )
+  }
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between relative">
+        <div className="flex items-center gap-8">
             <Link href={user ? "/admin/dashboard" : "/admin/login"} className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center">
                 <svg
@@ -59,20 +75,18 @@ const AdminNavbar = () => {
                   <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
                 </svg>
               </div>
-              <span className="text-lg font-semibold text-white">FlexYourFit Admin</span>
+              <span className="text-lg font-semibold text-white hidden md:block">FlexYourFit Admin</span>
             </Link>
         </div>
 
-        <div className="flex items-center gap-6">
-          {user && (
-            <Link 
-              href="/admin/dashboard" 
-              className={`text-sm transition-colors ${pathname === '/admin/dashboard' ? 'text-white font-bold' : 'text-zinc-400 hover:text-white'}`}
-            >
-              Dashboard
-            </Link>
-          )}
-        </div>
+        {/* Navigation Tabs (Centered) */}
+        {user && (
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 bg-zinc-900/50 p-1 rounded-full border border-zinc-800/50">
+                <NavItem tab="dashboard" label="Dashboard" icon={BarChart3} />
+                <NavItem tab="manage" label="Manage" icon={LayoutGrid} />
+                <NavItem tab="create" label="Add New" icon={Plus} />
+            </div>
+        )}
 
         <div className="flex items-center gap-4">
           {user && (
@@ -85,7 +99,6 @@ const AdminNavbar = () => {
              </span>
            </button>
           )}
-         
         </div>
       </div>
     </nav>

@@ -12,6 +12,7 @@ export interface FireStoreInterview {
   duration: string;
   syllabus: string[];
   createdAt: string;
+  usageCount: number;
 }
 
 export async function getInterviews() {
