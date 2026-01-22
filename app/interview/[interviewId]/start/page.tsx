@@ -6,13 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import { Webcam, Mic, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 import DashboardNavbar from "@/app/components/DashboardNavbar";
 
-// Mock data for now (since we don't have a backend fetch yet)
-const MOCK_INTERVIEW_INFO = {
-  title: "Full Stack Developer Interview",
-  description: "This interview focuses on React, Node.js, and System Design.",
-  duration: "45 mins",
-  questions: 5,
-};
+import { getInterviewById, FireStoreInterview } from "@/lib/actions/interview.action";
+
+// Mock data removed as we are now fetching real data
 
 const InterviewSetupPage = () => {
   const params = useParams();
@@ -20,7 +16,24 @@ const InterviewSetupPage = () => {
   const [hasPermissions, setHasPermissions] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [interview, setInterview] = useState<FireStoreInterview | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const fetchInterview = async () => {
+      try {
+        if (params.interviewId) {
+            const data = await getInterviewById(params.interviewId as string);
+            if (data) {
+                setInterview(data);
+            }
+        }
+      } catch (error) {
+        console.error("Error fetching interview:", error);
+      }
+    };
+    fetchInterview();
+  }, [params.interviewId]);
 
   useEffect(() => {
     // Cleanup function to stop stream when component unmounts
@@ -64,6 +77,14 @@ const InterviewSetupPage = () => {
     }
   };
 
+  if (!interview) {
+    return (
+        <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+             <div className="text-zinc-400">Loading interview details...</div>
+        </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col">
        <DashboardNavbar />
@@ -88,15 +109,15 @@ const InterviewSetupPage = () => {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
                         <span className="text-zinc-500 text-sm block mb-1">Role</span>
-                        <span className="text-zinc-200 font-medium">{MOCK_INTERVIEW_INFO.title}</span>
+                        <span className="text-zinc-200 font-medium">{interview.title}</span>
                     </div>
                      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
                         <span className="text-zinc-500 text-sm block mb-1">Duration</span>
-                        <span className="text-zinc-200 font-medium">{MOCK_INTERVIEW_INFO.duration}</span>
+                        <span className="text-zinc-200 font-medium">{interview.duration}</span>
                     </div>
                      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
-                        <span className="text-zinc-500 text-sm block mb-1">Questions</span>
-                        <span className="text-zinc-200 font-medium">{MOCK_INTERVIEW_INFO.questions}</span>
+                        <span className="text-zinc-500 text-sm block mb-1">Difficulty</span>
+                        <span className="text-zinc-200 font-medium">{interview.difficulty}</span>
                     </div>
                 </div>
                 <div className="text-sm text-zinc-400 leading-relaxed">

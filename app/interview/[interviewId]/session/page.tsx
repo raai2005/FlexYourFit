@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, Mic, MicOff, PhoneOff, Volume2, User } from "lucide-react";
 import Vapi from "@vapi-ai/web";
-import { getInterviewById, trackInterviewStart } from "@/lib/actions/interview.action";
+import { getInterviewById, trackInterviewStart, completeInterviewSession } from "@/lib/actions/interview.action";
 import { FireStoreInterview } from "@/lib/actions/interview.action";
 import DashboardNavbar from "@/app/components/DashboardNavbar";
 import { toast } from "sonner";
@@ -25,6 +25,10 @@ const InterviewSessionPage = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
+
+  const [hasPermissions, setHasPermissions] = useState(false);
+  const startTimeRef = useRef<number | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   // Fetch interview details
   useEffect(() => {
@@ -47,6 +51,11 @@ const InterviewSessionPage = () => {
 
     if (params.interviewId) {
       fetchInterview();
+    } else {
+        console.warn("Interview ID missing in params");
+        setIsLoading(false);
+        toast.error("Invalid Session ID");
+        router.push("/dashboard");
     }
   }, [params.interviewId, router]);
 
@@ -59,11 +68,14 @@ const InterviewSessionPage = () => {
           audio: true,
         });
         setStream(mediaStream);
+        setHasPermissions(true);
         if (videoRef.current) {
           videoRef.current.srcObject = mediaStream;
         }
       } catch (err) {
         console.error("Error accessing camera:", err);
+        setHasPermissions(false);
+        toast.error("Camera/Microphone access denied");
       }
     };
 
@@ -86,42 +98,31 @@ const InterviewSessionPage = () => {
   // Start Vapi Call
   const startInterview = useCallback(async () => {
     if (!interview) return;
+    if (!hasPermissions) {
+        toast.error("Please enable camera/microphone first");
+        return;
+    }
 
     setCallStatus("connecting");
 
     try {
-      // Construct a robust system prompt/context
-      const systemInstruction = `
-        You are an expert technical interviewer conducting a ${interview.difficulty} level interview for the role of ${interview.title}.
-        
-        Job Description: ${interview.description}
-        
-        Focus Topics (Syllabus): ${interview.syllabus.join(", ")}
-        
-        Your Goal:
-        1. Start by briefly introducing yourself as the AI interviewer.
-        2. Ask 3-4 distinct technical questions based on the Syllabus and Job Description.
-        3. Evaluate the candidate's answers. If they cover the topic well, move to the next. If they miss key points, ask a tailored follow-up.
-        4. Keep the conversation professional but encouraging.
-        5. IMPORTANT: After you have asked your questions (approx 10-15 mins of conversation) or if the candidate indicates they are done, YOU MUST CONCLUDE the interview.
-        6. To conclude, say: "Thank you for your time. That concludes our interview session." and stop asking questions.
-      `.trim();
-
-      // Start the call with the specific Assistant ID and injected variables
       await vapi.start(process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID!, {
         variableValues: {
           jobRole: interview.title,
+          jobDescription: interview.description,
+          difficulty: interview.difficulty,
           techStack: interview.syllabus.join(", "),
-          // We hijack the 'questions' variable to pass our full prompt since specific questions might be missing
-          questions: systemInstruction,
         },
       });
       setCallStatus("active");
+      startTimeRef.current = Date.now();
       
-      // Track usage
       if (interview.id) {
           const userId = auth.currentUser?.uid || "";
-          trackInterviewStart(interview.id, userId);
+          const result = await trackInterviewStart(interview.id, userId);
+          if (result && result.sessionId) {
+              setSessionId(result.sessionId);
+          }
       }
 
     } catch (error) {
@@ -129,29 +130,22 @@ const InterviewSessionPage = () => {
       toast.error("Failed to start AI Interviewer");
       setCallStatus("idle");
     }
-  }, [interview]);
+  }, [interview, hasPermissions]);
 
   // Handle Vapi Events
   useEffect(() => {
     const onCallEnd = () => {
       setCallStatus("ended");
-      // Only show success if we were actually active/connecting
-      // But since we can't easily check previous state in this closure without ref, 
-      // strict "ended" state is enough.
+      startTimeRef.current = null;
       toast("Interview Session Ended");
     };
 
-    const onSpeechStart = () => {
-      setIsSpeaking(true);
-    };
-
-    const onSpeechEnd = () => {
-      setIsSpeaking(false);
-    };
-
+    const onSpeechStart = () => setIsSpeaking(true);
+    const onSpeechEnd = () => setIsSpeaking(false);
+    
+    // Improved Error Handling
     const onError = (e: any) => {
-      console.error("Vapi Error:", e);
-      // Don't auto-end on error, let it degrade or user end it, unless critical
+        console.error("Vapi Error:", e);
     };
 
     vapi.on("call-end", onCallEnd);
@@ -163,7 +157,7 @@ const InterviewSessionPage = () => {
       vapi.removeAllListeners();
       vapi.stop();
     };
-  }, []); // Run only on mount/unmount
+  }, [interview]); 
 
   const toggleMute = () => {
     const newMutedState = !isMuted;
@@ -171,12 +165,19 @@ const InterviewSessionPage = () => {
     setIsMuted(newMutedState);
   };
 
-  const endCall = () => {
+  const endCall = async () => {
     vapi.stop();
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
     setCallStatus("ended");
+    
+    // Mark session as completed
+    if (sessionId) {
+        const userId = auth.currentUser?.uid || "";
+        await completeInterviewSession(userId, sessionId);
+    }
+    
     router.push("/dashboard");
   };
 
@@ -195,6 +196,7 @@ const InterviewSessionPage = () => {
       <DashboardNavbar />
 
       <main className="flex-1 flex flex-col items-center justify-center p-6 pt-20">
+        
         {/* Interview Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs text-zinc-400 font-medium mb-2">

@@ -115,17 +115,81 @@ export async function trackInterviewStart(interviewId: string, userId: string) {
         // 2. Increment User Completed Count (and potentially store session history later)
         if (userId) {
             const userRef = db.collection("users").doc(userId);
-            // using set with merge to ensure doc exists
-            batch.set(userRef, { 
-                completedInterviews: FieldValue.increment(1),
-                lastActiveAt: new Date().toISOString()
-            }, { merge: true });
+            
+            // 2a. Get Interview Details for Snapshot
+            const interviewSnapshot = await interviewRef.get();
+            const interviewData = interviewSnapshot.data();
+
+            if (interviewData) {
+                // 2b. Check if Session Document exists
+                const sessionRef = userRef.collection("interviews").doc(interviewId);
+                const sessionDoc = await sessionRef.get();
+
+                if (sessionDoc.exists) {
+                    // Update existing -> Increment attempts, update startedAt
+                    batch.update(sessionRef, {
+                        attempts: FieldValue.increment(1),
+                        startedAt: new Date().toISOString(),
+                        status: "started",
+                        // Reset simple status fields if needed, but keep history if strictly overwrite
+                        interviewTitle: interviewData.title || "Unknown Interview",
+                    });
+                } else {
+                    // Create new
+                    const sessionData = {
+                        id: interviewId, // Use interviewId as doc ID
+                        interviewId: interviewId,
+                        interviewTitle: interviewData.title || "Unknown Interview",
+                        category: interviewData.category || "General",
+                        difficulty: interviewData.difficulty || "Medium",
+                        startedAt: new Date().toISOString(),
+                        status: "started",
+                        attempts: 1 
+                    };
+                    batch.set(sessionRef, sessionData);
+                }
+
+                // 2c. Update User Aggregate Stats
+                batch.set(userRef, { 
+                    lastActiveAt: new Date().toISOString()
+                }, { merge: true });
+
+                await batch.commit();
+                return { success: true, sessionId: interviewId };
+            }
         }
 
         await batch.commit();
         return { success: true };
     } catch (error) {
         console.error("Error tracking interview start:", error);
+        return { success: false };
+    }
+}
+
+// New function to mark interview as completed
+export async function completeInterviewSession(userId: string, sessionId: string) {
+    try {
+        const sessionRef = db.collection("users").doc(userId).collection("interviews").doc(sessionId);
+        const userRef = db.collection("users").doc(userId);
+
+        const batch = db.batch();
+
+        // 1. Update Session Status
+        batch.update(sessionRef, {
+            status: "completed",
+            endedAt: new Date().toISOString()
+        });
+
+        // 2. Increment User Completed Count
+        batch.set(userRef, {
+            completedInterviews: FieldValue.increment(1)
+        }, { merge: true });
+
+        await batch.commit();
+        return { success: true };
+    } catch (error) {
+        console.error("Error completing interview session:", error);
         return { success: false };
     }
 }
