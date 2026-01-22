@@ -43,71 +43,30 @@ export async function generateRoadmap(role: string): Promise<{ success: boolean;
       - Do not wrap the JSON in markdown code blocks. Just return raw JSON.
     `;
 
-    const models = ["gemini-1.5-flash", "gemini-pro"];
-    let finalError;
+    const modelName = "gemini-2.5-flash";
 
-    for (const modelName of models) {
-        try {
-            console.log(`Attempting with model: ${modelName}`);
-            const model = genAI.getGenerativeModel({ model: modelName });
-            
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = response.text();
-            console.log(`Success with ${modelName}`);
-            
-            const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-            const roadmapData: RoadmapResponse = JSON.parse(cleanText);
-            
-            return { success: true, data: roadmapData };
-        } catch (error: any) {
-            console.warn(`Failed with ${modelName}:`, error.message);
-            finalError = error;
-            // Continue to next model
-        }
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      
+      const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      const roadmapData: RoadmapResponse = JSON.parse(cleanText);
+      
+      return { success: true, data: roadmapData };
+    } catch (error: any) {
+      console.warn(`Failed with ${modelName}:`, error.message);
+      throw error;
     }
     
-    throw finalError;
+
 
   } catch (error: any) {
     console.error("Gemini API exceeded/failed. Using Fallback Data for demonstration.");
     
-    // FALLBACK MOCK DATA to ensure UI works for the user
-    // This allows them to see the feature even if their API key doesn't have the right permissions
-    const mockRoadmap: RoadmapResponse = {
-        role: role,
-        steps: [
-            {
-                title: "Fundamentals (Fallback)",
-                description: "Master the core concepts required for " + role + ". (Note: This is a placeholder because the AI API failed).",
-                topics: ["Core Concepts", "Basic Syntax", "Environment Setup"]
-            },
-            {
-                title: "Advanced Topics",
-                description: "Deep dive into complex areas.",
-                topics: ["Advanced Patterns", "Performance", "Security"]
-            },
-            {
-                title: "Frameworks & Tools",
-                description: "Industry standard tools.",
-                topics: ["Popular Frameworks", "Testing", "Deployment"]
-            },
-            {
-                title: "Real-world Projects",
-                description: "Build something specific.",
-                topics: ["Full Stack App", "API Integration", "Database Design"]
-            },
-            {
-                title: "Interview Prep",
-                description: "Get ready for the job.",
-                topics: ["System Design", "Behavioral Questions", "Mock Interviews"]
-            }
-        ]
-    };
-    
     return { 
         success: true, 
-        data: mockRoadmap,
         message: "Generated using fallback data (Gemini API unavailable)." 
     };
   }
