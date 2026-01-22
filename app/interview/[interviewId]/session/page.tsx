@@ -106,9 +106,13 @@ const InterviewSessionPage = () => {
     setCallStatus("connecting");
 
     try {
+      const jobRoleVariables = interview.type === "role" 
+        ? `${interview.title} Role` 
+        : `${interview.title} Assessment`;
+
       await vapi.start(process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID!, {
         variableValues: {
-          jobRole: interview.title,
+          jobRole: jobRoleVariables,
           jobDescription: interview.description,
           difficulty: interview.difficulty,
           techStack: interview.syllabus.join(", "),
