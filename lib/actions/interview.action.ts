@@ -168,7 +168,7 @@ export async function trackInterviewStart(interviewId: string, userId: string) {
 }
 
 // New function to mark interview as completed
-export async function completeInterviewSession(userId: string, sessionId: string) {
+export async function completeInterviewSession(userId: string, sessionId: string, transcript: { role: string; content: string }[], totalScore: number) {
     try {
         const sessionRef = db.collection("users").doc(userId).collection("interviews").doc(sessionId);
         const userRef = db.collection("users").doc(userId);
@@ -178,7 +178,9 @@ export async function completeInterviewSession(userId: string, sessionId: string
         // 1. Update Session Status
         batch.update(sessionRef, {
             status: "completed",
-            endedAt: new Date().toISOString()
+            endedAt: new Date().toISOString(),
+            transcript: transcript,
+            score: totalScore
         });
 
         // 2. Increment User Completed Count
@@ -192,6 +194,23 @@ export async function completeInterviewSession(userId: string, sessionId: string
         console.error("Error completing interview session:", error);
         return { success: false };
     }
+}
+
+export async function saveInterviewFeedback(params: { interviewId: string; userId: string; transcript: { role: string; content: string }[]; totalScore: number; }) {
+  try {
+    const feedbackRef = db.collection('feedback').doc();
+    await feedbackRef.set({
+      interviewId: params.interviewId,
+      userId: params.userId,
+      transcript: params.transcript,
+      totalScore: params.totalScore,
+      createdAt: new Date().toISOString(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving interview feedback:', error);
+    return { success: false };
+  }
 }
 
 export async function getUserStats(userId: string) {

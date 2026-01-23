@@ -6,6 +6,7 @@ import { Loader2, Mic, MicOff, PhoneOff, Volume2, User } from "lucide-react";
 import Vapi from "@vapi-ai/web";
 import { getInterviewById, trackInterviewStart, completeInterviewSession } from "@/lib/actions/interview.action";
 import { FireStoreInterview } from "@/lib/actions/interview.action";
+import { generateInterviewFeedback } from "@/lib/actions/gemini";
 import DashboardNavbar from "@/app/components/DashboardNavbar";
 import { toast } from "sonner";
 import { auth } from "@/Firebase/client";
@@ -29,6 +30,7 @@ const InterviewSessionPage = () => {
   const [hasPermissions, setHasPermissions] = useState(false);
   const startTimeRef = useRef<number | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [transcript, setTranscript] = useState<{role: string; content: string}[]>([]);
 
   // Fetch interview details
   useEffect(() => {
@@ -147,6 +149,16 @@ const InterviewSessionPage = () => {
     const onSpeechStart = () => setIsSpeaking(true);
     const onSpeechEnd = () => setIsSpeaking(false);
     
+    // Capture transcripts
+    const onMessage = (message: any) => {
+        if (message.type === "transcript" && message.transcriptType === "final") {
+            setTranscript(prev => [...prev, {
+                role: message.role, // 'user' or 'assistant'
+                content: message.transcript
+            }]);
+        }
+    };
+
     // Improved Error Handling
     const onError = (e: any) => {
         console.error("Vapi Error:", e);
@@ -155,13 +167,14 @@ const InterviewSessionPage = () => {
     vapi.on("call-end", onCallEnd);
     vapi.on("speech-start", onSpeechStart);
     vapi.on("speech-end", onSpeechEnd);
+    vapi.on("message", onMessage);
     vapi.on("error", onError);
 
     return () => {
       vapi.removeAllListeners();
       vapi.stop();
     };
-  }, [interview]); 
+  }, [interview]);  
 
   const toggleMute = () => {
     const newMutedState = !isMuted;
@@ -169,20 +182,41 @@ const InterviewSessionPage = () => {
     setIsMuted(newMutedState);
   };
 
-  const endCall = async () => {
+  const cleanupAndSave = async () => {
+    // 1. Stop things if running
     vapi.stop();
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
-    setCallStatus("ended");
     
-    // Mark session as completed
-    if (sessionId) {
+    // 2. Save
+    if (sessionId && interview) {
         const userId = auth.currentUser?.uid || "";
-        await completeInterviewSession(userId, sessionId);
+        
+        let score = 0;
+        try {
+            // Generate Score using Gemini
+            const conversationText = transcript.map(t => `${t.role}: ${t.content}`).join("\n");
+            const feedbackResult = await generateInterviewFeedback(conversationText, interview.title);
+            
+            if (feedbackResult.success && feedbackResult.data) {
+                score = feedbackResult.data.score;
+            }
+        } catch (error) {
+            console.error("Error generating score:", error);
+        }
+
+        await completeInterviewSession(userId, sessionId, transcript, score);
+        toast.success("Interview completed and saved!");
     }
-    
+
+    // 3. Navigate away
     router.push("/dashboard");
+  };
+
+  const endCall = async () => {
+    setCallStatus("ended");
+    await cleanupAndSave();
   };
 
   if (isLoading) {
@@ -324,7 +358,7 @@ const InterviewSessionPage = () => {
 
           {callStatus === 'ended' && (
             <button
-              onClick={() => router.push('/dashboard')}
+              onClick={cleanupAndSave}
               className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl text-lg transition-all flex items-center gap-2 shadow-lg shadow-red-500/20"
             >
               <PhoneOff className="w-5 h-5" />

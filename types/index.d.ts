@@ -2,6 +2,7 @@ interface Feedback {
   id: string;
   interviewId: string;
   totalScore: number;
+  transcript: { role: string; content: string }[];
   categoryScores: Array<{
     name: string;
     score: number;

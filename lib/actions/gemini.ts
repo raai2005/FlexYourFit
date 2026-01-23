@@ -104,7 +104,7 @@ export async function generateInterviewFeedback(transcript: string, jobRole: str
         // Assuming "gemini-1.5-flash" is the intended/valid actual model for "fast" responses.
         // However, I will stick to what is in the file "gemini-2.5-flash" if the user insists, but 1.5-flash is real.
         // Let's use "gemini-1.5-flash" for reliability as 2.5 doesn't exist publicly yet.
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
         
         const result = await model.generateContent(prompt);
         const response = await result.response;
