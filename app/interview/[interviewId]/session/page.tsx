@@ -6,7 +6,6 @@ import { Loader2, Mic, MicOff, PhoneOff, Volume2, User, CheckCircle } from "luci
 import Vapi from "@vapi-ai/web";
 import { getInterviewById, trackInterviewStart, completeInterviewSession } from "@/lib/actions/interview.action";
 import { FireStoreInterview } from "@/lib/actions/interview.action";
-import { generateInterviewFeedback } from "@/lib/actions/gemini";
 import DashboardNavbar from "@/app/components/DashboardNavbar";
 import { toast } from "sonner";
 import { auth } from "@/Firebase/client";

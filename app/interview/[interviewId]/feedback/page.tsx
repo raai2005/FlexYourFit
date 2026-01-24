@@ -40,15 +40,10 @@ const FeedbackPage = () => {
         if (!user || !params.interviewId) return;
 
         try {
-            console.log("Fetching data for:", params.interviewId);
             const [interviewData, sessionData] = await Promise.all([
                 getInterviewById(params.interviewId as string),
                 getUserInterviewSession(user.uid, params.interviewId as string)
             ]);
-            
-            console.log("Interview Data:", interviewData);
-            console.log("Session Data:", sessionData);
-
             if (!interviewData) {
                 toast.error("Interview not found");
                 router.push("/dashboard");
@@ -62,7 +57,6 @@ const FeedbackPage = () => {
             const session = sessionData as any;
 
             if (session?.score !== undefined && session?.feedback) {
-                console.log("Feedback already exists");
                 setFeedbackData({
                     score: session.score,
                     feedback: session.feedback,
@@ -72,22 +66,19 @@ const FeedbackPage = () => {
                 });
                 setIsSaved(true);
             } else if (session?.transcript) {
-                console.log("Generating feedback from transcript...", session.transcript.length);
                 setIsGenerating(true);
                 const transcriptText = session.transcript.map((t: any) => `${t.role}: ${t.content}`).join("\n");
                 
                 const result = await generateInterviewFeedback(transcriptText, interviewData.title, interviewData.syllabus);
-                console.log("Generation Result:", result);
                 
                 if (result.success && result.data) {
                     setFeedbackData(result.data);
                 } else {
-                    console.error("Feedback generation failed:", result.message);
                     toast.error("Failed to generate feedback: " + result.message);
                 }
                 setIsGenerating(false);
             } else {
-                console.warn("No transcript found in session");
+                // Handle no transcript case
             }
 
         } catch (error) {
@@ -173,7 +164,7 @@ const FeedbackPage = () => {
     <div className="min-h-screen bg-zinc-950">
         <DashboardNavbar />
         
-        <main className="pt-24 pb-12 px-6">
+        <main className="pt-24 pb-32 px-6">
             <div className="max-w-5xl mx-auto space-y-8">
                 
                 {/* 1. Header Details */}
@@ -287,25 +278,25 @@ const FeedbackPage = () => {
 
                 {/* 6. Save Action Bar */}
                 {!isSaved && (
-                    <div className="fixed bottom-0 left-0 right-0 p-4 bg-zinc-900/80 backdrop-blur-md border-t border-zinc-800 flex justify-center animate-in slide-in-from-bottom-5">
-                        <div className="max-w-5xl w-full flex items-center justify-between">
+                    <div className="fixed bottom-0 left-0 right-0 py-4 px-6 bg-zinc-900/90 backdrop-blur-lg border-t border-zinc-800 flex justify-center animate-in slide-in-from-bottom-5 z-50">
+                        <div className="max-w-5xl w-full flex items-center justify-between gap-4">
                             <p className="text-zinc-400 text-sm hidden md:block">
-                                This feedback is currently unsaved. Save it to your profile to track your progress.
+                                Don't forget to save your feedback results to your profile.
                             </p>
                             <button
                                 onClick={handleSave}
                                 disabled={isSaving}
-                                className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                                className="w-full md:w-auto px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold rounded-lg shadow-lg shadow-emerald-500/10 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 text-sm"
                             >
                                 {isSaving ? (
                                     <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        <Loader2 className="w-4 h-4 animate-spin" />
                                         Saving...
                                     </>
                                 ) : (
                                     <>
-                                        <Save className="w-5 h-5" />
-                                        Save Results to Dashboard
+                                        <Save className="w-4 h-4" />
+                                        Save Results
                                     </>
                                 )}
                             </button>

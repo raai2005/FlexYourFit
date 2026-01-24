@@ -43,7 +43,7 @@ export async function generateRoadmap(role: string): Promise<{ success: boolean;
       - Do not wrap the JSON in markdown code blocks. Just return raw JSON.
     `;
 
-    const modelName = "gemini-1.5-pro";
+    const modelName = "gemini-2.5-flash";
 
     try {
       const model = genAI.getGenerativeModel({ model: modelName });
@@ -107,11 +107,9 @@ export async function generateInterviewFeedback(transcript: string, jobRole: str
           Do not include markdown formatting.
         `;
 
-        console.log(`Generating feedback for ${jobRole} using gemini-pro...`);
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         
         const result = await model.generateContent(prompt);
-        console.log("Gemini response received");
         const response = await result.response;
         const text = response.text();
         
