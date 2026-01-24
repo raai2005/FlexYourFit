@@ -60,16 +60,9 @@ const AdminDashboard = () => {
   });
 
   useEffect(() => {
-    const isAdmin = localStorage.getItem("isAdmin");
-    if (isAdmin === "true") return;
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push("/admin/login");
-      }
-    });
-
-    return () => unsubscribe();
+    // Middleware protects this route now. 
+    // We can add a simple server-side check double-verification in future if needed, 
+    // but for now relying on middleware is standard pattern.
   }, [router]);
 
   // Fetch data based on active tab

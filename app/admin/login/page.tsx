@@ -24,7 +24,6 @@ const AdminLogin = () => {
     const result = await verifyAdminCredentials(formData);
 
     if (result.success) {
-        localStorage.setItem("isAdmin", "true");
         toast.success("Admin logged in successfully");
         router.push("/admin/dashboard");
         setLoading(false);

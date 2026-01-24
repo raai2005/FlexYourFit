@@ -3,43 +3,29 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/Firebase/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { BarChart3, LayoutGrid, Plus } from "lucide-react";
+import { adminLogout } from "@/lib/actions/admin";
 
 const AdminNavbar = () => {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || "dashboard";
 
   useEffect(() => {
-    // Check on mount and when pathname changes (e.g. after login/logout)
-    const checkAuth = () => {
-        const isAdmin = localStorage.getItem("isAdmin");
-        if(isAdmin === "true"){
-            setUser({ displayName: "Admin" });
-        } else {
-             if(!auth.currentUser) {
-                 setUser(null);
-             }
-        }
-    };
-    
-    checkAuth();
-    
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      // Prioritize admin session if active
-      if (!localStorage.getItem("isAdmin")) {
-        setUser(currentUser);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+    // If we are on dashboard routes, we are logged in (protected by middleware)
+    if (pathname.includes("/admin") && !pathname.includes("/login")) {
+        setUser({ displayName: "Admin" });
+    } else {
+        setUser(null);
+    }
+  }, [pathname]);
 
   const handleSignOut = async () => {
-      localStorage.removeItem("isAdmin");
-      await signOut(auth);
+      await adminLogout();
       router.push("/admin/login");
   }
 

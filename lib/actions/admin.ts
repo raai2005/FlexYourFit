@@ -2,6 +2,8 @@
 
 import { db } from "@/Firebase/admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { SignJWT } from "jose";
+import { cookies } from "next/headers";
 
 export async function verifyAdminCredentials(formData: FormData) {
   const email = formData.get("email") as string;
@@ -16,10 +18,32 @@ export async function verifyAdminCredentials(formData: FormData) {
   }
 
   if (email === adminId && password === adminPass) {
+    // Generate JWT
+    const secret = new TextEncoder().encode(process.env.ADMIN_SECRET || process.env.ADMIN_PASS || "fallback_secret_do_not_use_in_prod");
+    const token = await new SignJWT({ role: "admin" })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("24h")
+      .sign(secret);
+
+    // Set Cookie
+    (await cookies()).set("admin_session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24, // 1 day
+      sameSite: "strict",
+    });
+
     return { success: true };
   }
 
   return { success: false, message: "Invalid admin credentials" };
+}
+
+export async function adminLogout() {
+  (await cookies()).delete("admin_session");
+  return { success: true };
 }
 
 export interface NewInterviewData {
