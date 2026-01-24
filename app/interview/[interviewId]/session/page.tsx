@@ -200,21 +200,10 @@ const InterviewSessionPage = () => {
     if (sessionId && interview) {
         const userId = auth.currentUser?.uid || "";
         
-        let score = 0;
-        try {
-            // Generate Score using Gemini
-            const conversationText = transcript.map(t => `${t.role}: ${t.content}`).join("\n");
-            const feedbackResult = await generateInterviewFeedback(conversationText, interview.title);
-            
-            if (feedbackResult.success && feedbackResult.data) {
-                score = feedbackResult.data.score;
-            }
-        } catch (error) {
-            console.error("Error generating score:", error);
-        }
-
-        await completeInterviewSession(userId, sessionId, transcript, score);
-        toast.success("Interview completed and saved!");
+        // Just save the transcript and mark as completed.
+        // Feedback generation happens on the next page.
+        await completeInterviewSession(userId, sessionId, transcript);
+        toast.success("Interview completed!");
     }
 
     setIsSaving(false);
@@ -397,14 +386,14 @@ const InterviewSessionPage = () => {
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-white mb-2">Interview Completed!</h3>
                 <p className="text-zinc-400">
-                  Thank you for taking the interview. Your interview details and transcripts have been saved successfully.
+                  Your interview has been recorded. Click below to view your score and AI feedback.
                 </p>
               </div>
               <button
-                onClick={() => router.push("/dashboard")}
-                className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors"
+                onClick={() => router.push(`/interview/${params.interviewId}/feedback`)}
+                className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-emerald-500/20"
               >
-                Go to Dashboard
+                View Feedback with Score
               </button>
             </div>
           </div>

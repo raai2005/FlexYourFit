@@ -167,8 +167,8 @@ export async function trackInterviewStart(interviewId: string, userId: string) {
     }
 }
 
-// New function to mark interview as completed
-export async function completeInterviewSession(userId: string, sessionId: string, transcript: { role: string; content: string }[], totalScore: number) {
+// New function to mark interview as completed (initially just status and transcript)
+export async function completeInterviewSession(userId: string, sessionId: string, transcript: { role: string; content: string }[]) {
     try {
         const sessionRef = db.collection("users").doc(userId).collection("interviews").doc(sessionId);
         const userRef = db.collection("users").doc(userId);
@@ -180,7 +180,7 @@ export async function completeInterviewSession(userId: string, sessionId: string
             status: "completed",
             endedAt: new Date().toISOString(),
             transcript: transcript,
-            score: totalScore
+            // Score and feedback will be added later when the user clicks "Save Feedback"
         });
 
         // 2. Increment User Completed Count
@@ -196,21 +196,45 @@ export async function completeInterviewSession(userId: string, sessionId: string
     }
 }
 
-export async function saveInterviewFeedback(params: { interviewId: string; userId: string; transcript: { role: string; content: string }[]; totalScore: number; }) {
+export interface DetailedFeedbackData {
+    score: number;
+    feedback: string;
+    good_parts: string[];
+    improvements: string[];
+    motivation: string;
+}
+
+export async function saveDetailedFeedback(userId: string, sessionId: string, feedbackData: DetailedFeedbackData) {
   try {
-    const feedbackRef = db.collection('feedback').doc();
-    await feedbackRef.set({
-      interviewId: params.interviewId,
-      userId: params.userId,
-      transcript: params.transcript,
-      totalScore: params.totalScore,
-      createdAt: new Date().toISOString(),
+    const sessionRef = db.collection("users").doc(userId).collection("interviews").doc(sessionId);
+    
+    await sessionRef.update({
+        score: feedbackData.score,
+        feedback: feedbackData.feedback,
+        good_parts: feedbackData.good_parts || [],
+        improvements: feedbackData.improvements || [],
+        motivation: feedbackData.motivation || "",
+        feedbackSavedAt: new Date().toISOString()
     });
+
     return { success: true };
   } catch (error) {
-    console.error('Error saving interview feedback:', error);
+    console.error('Error saving detailed feedback:', error);
     return { success: false };
   }
+}
+
+export async function getUserInterviewSession(userId: string, sessionId: string) {
+    try {
+        const docRef = await db.collection("users").doc(userId).collection("interviews").doc(sessionId).get();
+        if (docRef.exists) {
+            return { id: docRef.id, ...docRef.data() };
+        }
+        return null;
+    } catch (error) {
+        console.error("Error fetching user session:", error);
+        return null;
+    }
 }
 
 export async function getUserStats(userId: string) {

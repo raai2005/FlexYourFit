@@ -43,7 +43,7 @@ export async function generateRoadmap(role: string): Promise<{ success: boolean;
       - Do not wrap the JSON in markdown code blocks. Just return raw JSON.
     `;
 
-    const modelName = "gemini-2.5-flash";
+    const modelName = "gemini-1.5-pro";
 
     try {
       const model = genAI.getGenerativeModel({ model: modelName });
@@ -69,10 +69,12 @@ export async function generateRoadmap(role: string): Promise<{ success: boolean;
 export interface FeedbackResponse {
     score: number;
     feedback: string;
+    good_parts: string[];
     improvements: string[];
+    motivation: string;
 }
 
-export async function generateInterviewFeedback(transcript: string, jobRole: string): Promise<{ success: boolean; data?: FeedbackResponse; message?: string }> {
+export async function generateInterviewFeedback(transcript: string, jobRole: string, syllabus: string[] = []): Promise<{ success: boolean; data?: FeedbackResponse; message?: string }> {
     try {
         if (!apiKey) {
             return { success: false, message: "Gemini API Key is not configured." };
@@ -80,33 +82,36 @@ export async function generateInterviewFeedback(transcript: string, jobRole: str
 
         const prompt = `
           Analyze the following interview transcript for the role of "${jobRole}".
+          Context/Syllabus: ${syllabus.join(", ")}
           
           Transcript:
           "${transcript.substring(0, 5000)}" 
           (Note: Transcript might be truncated if too long)
 
-          Your Task:
-          1. Rate the candidate's performance on a scale of 1-100.
-          2. Provide a brief 2-3 sentence overall feedback summary.
-          3. List 3-5 specific actionable improvements based on their answers.
+          Your Task is to provide a detailed evaluation in the following JSON format:
+          1. **score**: Rate the candidate's performance on a scale of 1-100 (integer).
+          2. **feedback**: A concise 2-3 sentence overall summary of their performance.
+          3. **good_parts**: A list of 2-3 specific concepts or skills the candidate demonstrated well.
+          4. **improvements**: A list of 3-5 specific actionable areas for improvement or missing concepts.
+          5. **motivation**: A very short, punchy motivational quote or phrase (max 5 words) to encourage them.
 
           Return the response ONLY as a VALID JSON object with this structure:
           {
             "score": 85,
             "feedback": "...",
-            "improvements": ["...", "...", "..."]
+            "good_parts": ["...", "..."],
+            "improvements": ["...", "...", "..."],
+            "motivation": "Keep pushing, you're close!"
           }
           
           Do not include markdown formatting.
         `;
 
-        // User requested "gemnui 2.5 fash", mapping to a valid fast model or the one used in the codebase.
-        // Assuming "gemini-1.5-flash" is the intended/valid actual model for "fast" responses.
-        // However, I will stick to what is in the file "gemini-2.5-flash" if the user insists, but 1.5-flash is real.
-        // Let's use "gemini-1.5-flash" for reliability as 2.5 doesn't exist publicly yet.
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+        console.log(`Generating feedback for ${jobRole} using gemini-pro...`);
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
         
         const result = await model.generateContent(prompt);
+        console.log("Gemini response received");
         const response = await result.response;
         const text = response.text();
         
