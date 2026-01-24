@@ -2,92 +2,171 @@
 
 An AI-powered mock interview platform designed to help users practice and improve their interview skills with real-time feedback.
 
+![Project Banner](public/banner-placeholder.png)
+
 ## Features
 
-- **AI Mock Interviews**: Simulate real interview scenarios with Google Gemini AI.
-- **Voice Interaction**: Speak naturally with the AI interviewer using Vapi for a realistic experience.
-- **Real-time Feedback**: Receive detailed performance analysis, including scores, strengths, and areas for improvement.
-- **Dashboard**: Track your progress with visual charts and interview history.
-- **Secure Authentication**: User management and authentication via Firebase.
-- **Admin Panel**: Manage interview content and settings.
+- **🤖 AI Mock Interviews**: Experience realistic interview sessions tailored to your specific job role and description using Google's advanced Gemini AI.
+- **🎙️ Natural Voice Interaction**: Speak naturally with the AI interviewer. Integrated with Vapi for seamless speech-to-text and text-to-speech capabilities, making the experience feel like a real conversation.
+- **📊 Comprehensive Feedback**: Get instant, detailed feedback after every session:
+  - **Overall Score**: A quantitative rating (0-100) of your performance.
+  - **Review**: A summary of how you did.
+  - **Strengths**: Specific areas where you excelled.
+  - **Improvements**: Actionable advice on what to improve.
+  - **Sample Answers**: See better ways to answer the questions asked.
+- **📈 Progress Dashboard**: Track your interview history, monitor your scores over time, and visualize your improvement with interactive charts.
+- **🔐 Secure Authentication**: Robust user management using Firebase Authentication (Google & Email/Password).
+- **🛠️ Admin Panel**: A dedicated admin area to manage interview templates, questions, and system settings.
+- **📱 Responsive Design**: Fully optimized for desktop, tablet, and mobile devices.
+
+## Folder Structure
+
+```
+mock_interview/
+├── app/                    # Next.js 16 App Router (Pages & API routes)
+│   ├── (auth)/             # Authentication routes (sign-in, sign-up)
+│   ├── (root)/             # Main application layout & home
+│   ├── admin/              # Admin dashboard & controls
+│   ├── dashboard/          # User dashboard (stats, history)
+│   ├── interview/          # Interview session logic
+│   └── api/                # Backend API endpoints
+├── components/             # Reusable UI components (Shadcn UI, Custom)
+├── lib/                    # Utilities, helper functions, and actions
+│   ├── actions/            # Server Actions (Gemini, Database ops)
+│   └── utils.ts            # Common utility functions
+├── Firebase/               # Firebase configuration (Client & Admin)
+├── public/                 # Static assets (images, icons)
+├── types/                  # TypeScript interface definitions
+└── ...config files         # Tailwind, Next.js, ESLint configs
+```
 
 ## Tech Stack
 
 - **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Frontend**: React 19, Tailwind CSS 4
-- **AI**: [Google Gemini AI](https://deepmind.google/technologies/gemini/)
-- **Voice**: [Vapi](https://vapi.ai/)
-- **Backend/Database**: [Firebase](https://firebase.google.com/) (Auth, Firestore, Admin SDK)
-- **Styling**: Tailwind CSS, Shadcn UI (Radix Primitives), Lucide React
+- **AI Model**: [Google Gemini AI](https://deepmind.google/technologies/gemini/) (gemini-2.5-flash)
+- **Voice Engine**: [Vapi](https://vapi.ai/)
+- **Backend Service**: [Firebase](https://firebase.google.com/)
+  - **Authentication**: Secure user login.
+  - **Firestore**: NoSQL database for storing user data & interviews.
+  - **Admin SDK**: Server-side management.
+- **UI Components**: [Shadcn UI](https://ui.shadcn.com/) (based on Radix UI) & Lucide React Icons.
 - **Language**: TypeScript
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (latest LTS recommended)
-- npm, yarn, pnpm, or bun
+- **Node.js**: v18 or later (LTS recommended)
+- **Package Manager**: npm, yarn, pnpm, or bun
 
 ### Installation
 
-1. **Clone the repository:**
+1.  **Clone the repository:**
 
-   ```bash
-   git clone <repository-url>
-   cd mock_interview
-   ```
+    ```bash
+    git clone https://github.com/yourusername/mock-interview-prep.git
+    cd mock_interview_prep
+    ```
 
-2. **Install dependencies:**
+2.  **Install dependencies:**
 
-   ```bash
-   npm install
-   # or
-   yarn install
-   # or
-   pnpm install
-   ```
+    ```bash
+    npm install
+    ```
 
-3. **Environment Setup:**
+3.  **Environment Setup:**
+    Create a `.env.local` file in the root directory and add your credentials:
 
-   Create a `.env.local` file in the root directory and add the following environment variables:
+    ```env
+    # Google Gemini AI
+    GEMINI_API_KEY=your_gemini_api_key
 
-   ```env
-   # Gemini AI
-   GEMINI_API_KEY=your_gemini_api_key
+    # Vapi (Voice AI)
+    NEXT_PUBLIC_VAPI_PUBLIC_KEY=your_vapi_public_key
 
-   # Firebase Client SDK
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+    # Firebase Client (from Project Settings)
+    NEXT_PUBLIC_FIREBASE_API_KEY=...
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+    NEXT_PUBLIC_FIREBASE_APP_ID=...
+    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=...
 
-   # Firebase Admin SDK
-   FIREBASE_PROJECT_ID=your_project_id
-   FIREBASE_CLIENT_EMAIL=your_client_email
-   FIREBASE_PRIVATE_KEY="your_private_key"
+    # Firebase Admin (Service Account)
+    FIREBASE_PROJECT_ID=...
+    FIREBASE_CLIENT_EMAIL=...
+    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
 
-   # Admin Authentication
-   ADMIN_SECRET=your_admin_secret_key
-   # or
-   ADMIN_PASS=your_admin_password
-   ```
+    # Admin Access
+    ADMIN_SECRET=your_secure_secret
+    ```
 
-4. **Run the development server:**
+4.  **Run Locally:**
+    ```bash
+    npm run dev
+    ```
+    Visit [http://localhost:3000](http://localhost:3000) to view the app.
 
-   ```bash
-   npm run dev
-   ```
+## Usage
 
-   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1.  **Sign Up/Login**: Create an account to save your progress.
+2.  **Start Interview**: Click "Start New Interview" on the dashboard.
+3.  **Configure**: Enter the Job Role (e.g., "Full Stack Developer"), Job Description, and Years of Experience.
+4.  **Interview**:
+    - Allow microphone access.
+    - Listen to the AI interviewer's questions.
+    - Speak your answers clearly.
+    - Click "End Interview" when finished.
+5.  **Review**: Check your Feedback page for scores and actionable advice.
 
-## Learn More
+## Screenshots
 
-To learn more about the technologies used in this project:
+|                Landing Page                |             Interview Session              |                   Dashboard                    |
+| :----------------------------------------: | :----------------------------------------: | :--------------------------------------------: |
+| ![Landing](public/landing-placeholder.png) | ![Session](public/session-placeholder.png) | ![Dashboard](public/dashboard-placeholder.png) |
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Firebase Documentation](https://firebase.google.com/docs)
-- [Gemini API Documentation](https://ai.google.dev/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+> _Note: Replace these placeholders with actual screenshots of your application._
+
+## Deployment
+
+### Option 1: Vercel (Recommended) &nbsp; [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+Vercel is the creators of Next.js and offers the seamless deployment experience.
+
+1.  Push your code to a GitHub repository.
+2.  Go to [Vercel](https://vercel.com) and sign up.
+3.  Click **"Add New..."** -> **"Project"**.
+4.  Import your GitHub repository.
+5.  **Important**: In the configuration step, expand **"Environment Variables"** and add all the variables from your `.env.local` file.
+6.  Click **"Deploy"**.
+
+### Option 2: Netlify
+
+1.  Push your code to GitHub.
+2.  Go to [Netlify](https://www.netlify.com/) and sign up.
+3.  Click **"Add new site"** -> **"Import an existing project"**.
+4.  Connect to GitHub and select your repo.
+5.  In **"Site settings"** -> **"Environment variables"**, add your keys.
+6.  Click **"Deploy"**.
+
+## Contributing
+
+Contributions are welcome!
+
+1.  Fork the project.
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+
+**Your Name** - [LinkedIn Profile](https://linkedin.com) - email@example.com
+
+Project Link: [https://github.com/yourusername/mock-interview-prep](https://github.com/yourusername/mock-interview-prep)
