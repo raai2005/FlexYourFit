@@ -249,3 +249,21 @@ export async function getUserStats(userId: string) {
         return { completedInterviews: 0 };
     }
 }
+export async function getUserPastInterviews(userId: string) {
+    try {
+        const sessionsRef = db.collection("users").doc(userId).collection("interviews");
+        const snapshot = await sessionsRef.orderBy("startedAt", "desc").get();
+
+        if (snapshot.empty) {
+            return [];
+        }
+
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+    } catch (error) {
+        console.error("Error fetching past interviews:", error);
+        return [];
+    }
+}
