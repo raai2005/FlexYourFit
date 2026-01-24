@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, Mic, MicOff, PhoneOff, Volume2, User } from "lucide-react";
+import { Loader2, Mic, MicOff, PhoneOff, Volume2, User, CheckCircle } from "lucide-react";
 import Vapi from "@vapi-ai/web";
 import { getInterviewById, trackInterviewStart, completeInterviewSession } from "@/lib/actions/interview.action";
 import { FireStoreInterview } from "@/lib/actions/interview.action";
@@ -31,6 +31,8 @@ const InterviewSessionPage = () => {
   const startTimeRef = useRef<number | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [transcript, setTranscript] = useState<{role: string; content: string}[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   // Fetch interview details
   useEffect(() => {
@@ -159,7 +161,6 @@ const InterviewSessionPage = () => {
         }
     };
 
-    // Improved Error Handling
     const onError = (e: any) => {
         console.error("Vapi Error:", e);
     };
@@ -171,10 +172,14 @@ const InterviewSessionPage = () => {
     vapi.on("error", onError);
 
     return () => {
-      vapi.removeAllListeners();
-      vapi.stop();
+      vapi.off("call-end", onCallEnd);
+      vapi.off("speech-start", onSpeechStart);
+      vapi.off("speech-end", onSpeechEnd);
+      vapi.off("message", onMessage);
+      vapi.off("error", onError);
+      // vapi.stop(); // Only stop explicitly if needed, but here we just want to detach listeners. cleanupAndSave handles stopping.
     };
-  }, [interview]);  
+  }, []); // Empty dependency array ensures this runs only once on mount  
 
   const toggleMute = () => {
     const newMutedState = !isMuted;
@@ -188,6 +193,8 @@ const InterviewSessionPage = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
+
+    setIsSaving(true);
     
     // 2. Save
     if (sessionId && interview) {
@@ -210,8 +217,8 @@ const InterviewSessionPage = () => {
         toast.success("Interview completed and saved!");
     }
 
-    // 3. Navigate away
-    router.push("/dashboard");
+    setIsSaving(false);
+    setIsCompleted(true);
   };
 
   const endCall = async () => {
@@ -366,6 +373,42 @@ const InterviewSessionPage = () => {
             </button>
           )}
         </div>
+
+        {/* Saving Modal */}
+        {isSaving && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center gap-4 max-w-sm w-full mx-4 shadow-2xl">
+              <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-white mb-2">Saving Data</h3>
+                <p className="text-zinc-400">Please wait while we save your interview details and transcripts...</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Completion Modal */}
+        {isCompleted && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center gap-6 max-w-md w-full mx-4 shadow-2xl">
+              <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-emerald-500" />
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-white mb-2">Interview Completed!</h3>
+                <p className="text-zinc-400">
+                  Thank you for taking the interview. Your interview details and transcripts have been saved successfully.
+                </p>
+              </div>
+              <button
+                onClick={() => router.push("/dashboard")}
+                className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors"
+              >
+                Go to Dashboard
+              </button>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
