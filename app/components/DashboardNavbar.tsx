@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/Firebase/client";
-  import { useRouter, usePathname } from "next/navigation";
-  import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import { User as UserIcon, LogOut } from "lucide-react";
 
 const DashboardNavbar = () => {
   const [user, setUser] = useState<any>(null);
@@ -24,6 +25,19 @@ const DashboardNavbar = () => {
       await signOut(auth);
       router.push("/sign-in");
   }
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -64,23 +78,38 @@ const DashboardNavbar = () => {
           </Link>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={handleSignOut} 
-            className="flex items-center justify-center w-10 h-10 rounded-full border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 hover:border-zinc-700 transition-all text-zinc-400 hover:text-red-500"
-            title="Logout"
-          >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              strokeWidth={1.5} 
-              stroke="currentColor" 
-              className="w-5 h-5"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-            </svg>
-          </button>
+        <div className="flex items-center gap-4" ref={menuRef}>
+            <div className="relative">
+                <button 
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-800 transition-colors"
+                >
+                   <UserIcon className="w-5 h-5 text-zinc-400" />
+                </button>
+
+                {isMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-zinc-900 border border-zinc-800 rounded-xl py-2 shadow-xl animate-in fade-in zoom-in-95 duration-200">
+                        <div className="px-4 py-2 border-b border-zinc-800 mb-2">
+                            <p className="text-sm font-medium text-white truncate">
+                                {user?.email || "User"}
+                            </p>
+                        </div>
+                        
+                        <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-colors">
+                            <UserIcon className="w-4 h-4" />
+                            Profile
+                        </button>
+                        
+                        <button 
+                            onClick={handleSignOut}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
+                        >
+                            <LogOut className="w-4 h-4" />
+                            Log Out
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
       </div>
     </nav>
