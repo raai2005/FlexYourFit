@@ -228,31 +228,31 @@ const InterviewSessionPage = () => {
     <div className="min-h-screen bg-zinc-950 flex flex-col">
       <DashboardNavbar />
 
-      <main className="flex-1 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 pt-24 pb-12 w-full">
+      <main className="flex-1 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 pt-20 md:pt-24 pb-24 md:pb-12 w-full">
         
         {/* Interview Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4 md:mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs text-zinc-400 font-medium mb-2">
             <span>{interview.category}</span>
             <span>•</span>
             <span>{interview.duration}</span>
           </div>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="text-xl md:text-2xl font-bold text-white">
             {interview.title} Interview
           </h1>
         </div>
 
         {/* Main Interview Grid */}
-        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-8">
           {/* AI Interviewer */}
           <div className="relative aspect-video bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl border border-zinc-700 overflow-hidden flex items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/10" />
             
             {/* AI Avatar */}
             <div className="relative z-10 flex flex-col items-center gap-4">
-              <div className={`relative w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 flex items-center justify-center shadow-2xl ${callStatus === 'active' && isSpeaking ? 'animate-pulse scale-110' : ''} transition-transform duration-300`}>
-                <div className="w-28 h-28 rounded-full bg-zinc-900 flex items-center justify-center">
-                  <Volume2 className={`w-12 h-12 ${callStatus === 'active' ? 'text-emerald-400' : 'text-zinc-500'}`} />
+              <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 flex items-center justify-center shadow-2xl ${callStatus === 'active' && isSpeaking ? 'animate-pulse scale-110' : ''} transition-transform duration-300`}>
+                <div className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-zinc-900 flex items-center justify-center">
+                  <Volume2 className={`w-8 h-8 md:w-12 md:h-12 ${callStatus === 'active' ? 'text-emerald-400' : 'text-zinc-500'}`} />
                 </div>
                 {/* Speaking Indicator Ring */}
                 {callStatus === 'active' && isSpeaking && (
@@ -260,8 +260,8 @@ const InterviewSessionPage = () => {
                 )}
               </div>
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-white">AI Interviewer</h3>
-                <p className={`text-sm ${callStatus === 'active' ? (isSpeaking ? 'text-emerald-400' : 'text-zinc-400') : 'text-zinc-500'}`}>
+                <h3 className="text-base md:text-lg font-semibold text-white">AI Interviewer</h3>
+                <p className={`text-xs md:text-sm ${callStatus === 'active' ? (isSpeaking ? 'text-emerald-400' : 'text-zinc-400') : 'text-zinc-500'}`}>
                   {callStatus === 'idle' && 'Ready to start'}
                   {callStatus === 'connecting' && 'Connecting...'}
                   {callStatus === 'active' && (isSpeaking ? 'Speaking...' : 'Listening...')}
@@ -312,19 +312,19 @@ const InterviewSessionPage = () => {
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="flex items-center gap-4">
+        {/* Controls - Fixed at bottom for mobile, flow for desktop */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:static md:translate-x-0 flex items-center gap-4 bg-zinc-950/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-4 md:p-0 rounded-2xl border border-zinc-800 md:border-none shadow-2xl md:shadow-none">
           {callStatus === 'idle' && (
             <button
               onClick={startInterview}
-              className="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-lg transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/20"
+              className="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-lg transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/20 whitespace-nowrap"
             >
               Start Interview Now
             </button>
           )}
 
           {callStatus === 'connecting' && (
-            <div className="flex items-center gap-3 px-8 py-4 bg-zinc-800 rounded-2xl">
+            <div className="flex items-center gap-3 px-8 py-4 bg-zinc-800 rounded-2xl whitespace-nowrap">
               <Loader2 className="w-5 h-5 text-emerald-500 animate-spin" />
               <span className="text-white font-medium">Connecting...</span>
             </div>
@@ -354,7 +354,7 @@ const InterviewSessionPage = () => {
           {callStatus === 'ended' && (
             <button
               onClick={cleanupAndSave}
-              className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl text-lg transition-all flex items-center gap-2 shadow-lg shadow-red-500/20"
+              className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl text-lg transition-all flex items-center gap-2 shadow-lg shadow-red-500/20 whitespace-nowrap"
             >
               <PhoneOff className="w-5 h-5" />
               End / Leave
