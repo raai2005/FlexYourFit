@@ -2,7 +2,55 @@
 
 An AI-powered mock interview platform designed to help users practice and improve their interview skills with real-time feedback.
 
-![Project Banner](public/banner-placeholder.png)
+![Project Banner](public/assets/DWS7OLFYIC5ITK1T.png)
+
+## 💡 Inspiration
+
+The idea for **FlexYourFit** was born out of a common struggle: **interview anxiety**. We realized that many talented candidates fail not because they lack knowledge, but because they lack the practice to articulate their thoughts clearly under pressure. Traditional mock interviews require a peer (who might not give good feedback) or a paid coach (who is expensive). We wanted to democratize this process using Generative AI, creating a safe, judgment-free zone where anyone can "flex" their interview muscles until they fit the role perfectly.
+
+## 🚀 What it does
+
+**FlexYourFit** is an interactive, AI-powered specialized interview coaching platform. Here is the flow:
+
+1.  **Role Selection**: Users tell the platform what job they are applying for (e.g., "Senior React Developer") and their experience level.
+2.  **Real-time Simulation**: The AI acts as a hiring manager, conducting a voice-based interview. It asks relevant technical and behavioral questions.
+3.  **Voice Interaction**: Users answer verbally. The system transcribes their speech in real-time.
+4.  **Instant Feedback**: Once the interview ends, the AI analyzes the answers against industry standards. It provides a score, highlights strengths, points out weaknesses, and suggests better ways to frame the answers.
+
+## ⚙️ How we built it
+
+This project was built with a focus on **real-time interaction** and **seamless user experience**.
+
+- **Frontend**: We utilized **Next.js 16** for its server-side rendering capabilities and the new App Router.
+- **AI Integration**: The core "brain" is **Google's Gemini AI**, which generates dynamic questions and analyzes answers.
+- **Voice Engine**: We integrated **Vapi** to handle the speech-to-text and text-to-speech pipeline, creating a natural conversational flow.
+- **Backend & Database**: **Firebase** handles secure authentication and stores interview transcripts and scores in **Firestore**.
+- **Styling**: We used **Tailwind CSS 4** and **Shadcn UI** for a clean, accessible, and modern design.
+
+## 🧩 Challenges we ran into
+
+1.  **Latency in Voice AI**: One of the biggest hurdles was minimizing the delay between the user speaking and the AI responding. Optimizing the Vapi configuration and Gemini API calls was crucial to keep the conversation natural.
+2.  **Prompt Engineering**: Getting the AI to act like a strict yet helpful interviewer took several iterations. We had to fine-tune the system prompts to ensure the AI asked relevant follow-up questions and didn't just accept vague answers.
+3.  **Real-time State Management**: Synchronizing the voice state (listening/speaking) with the UI visualizers required complex state management in React to avoid UI glitches.
+
+## 🏆 Accomplishments that we're proud of
+
+- **Seamless Voice Integration**: Successfully creating a hands-free experience where users can just talk to their computer and get an intelligent response.
+- **Dynamic Feedback Engine**: The feedback system doesn't just give a generic score; it truly "listens" to the content of the answer and provides specific, actionable advice.
+- **Zero-Latency Feel**: Achieving a near-conversational response time that makes the AI feel present and attentive.
+
+## 📚 What we learned
+
+- **The power of Multimodal AI**: Combining text generation (Gemini) with voice synthesis creates a significantly more engaging user experience than text-only interfaces.
+- **Edge cases in Speech-to-Text**: We learned how to handle accents, background noise, and interruptions to make the application robust for real-world use.
+- **Full-stack Architecture**: Building a seamless integration between a Next.js frontend, serverless backend functions, and third-party AI APIs deepened our understanding of modern web architecture.
+
+## 🔮 What's next for FlexYourFit
+
+- **Custom Resume Analysis**: Allowing users to upload their resume so the AI can ask questions specific to their actual past experience.
+- **Coding Pad Integration**: Adding a live coding environment for technical interviews where the AI can review code in real-time.
+- **Mobile Application**: Building a React Native version to allow users to practice interviews on the go, perhaps before walking into a real one.
+- **Community Leaderboard**: Gamifying the process to encourage users to practice more often.
 
 ## Features
 
@@ -40,18 +88,26 @@ mock_interview/
 └── ...config files         # Tailwind, Next.js, ESLint configs
 ```
 
-## Tech Stack
+## 🛠️ Built With
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **Frontend**: React 19, Tailwind CSS 4
-- **AI Model**: [Google Gemini AI](https://deepmind.google/technologies/gemini/) (gemini-2.5-flash)
-- **Voice Engine**: [Vapi](https://vapi.ai/)
-- **Backend Service**: [Firebase](https://firebase.google.com/)
-  - **Authentication**: Secure user login.
-  - **Firestore**: NoSQL database for storing user data & interviews.
-  - **Admin SDK**: Server-side management.
-- **UI Components**: [Shadcn UI](https://ui.shadcn.com/) (based on Radix UI) & Lucide React Icons.
-- **Language**: TypeScript
+### Technologies
+
+- ![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white) **[Next.js 16](https://nextjs.org/)** - App Router & Server Actions.
+- ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) **[React 19](https://react.dev/)** - Component-based UI library.
+- ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) **[TypeScript](https://www.typescriptlang.org/)** - Static type checking.
+- ![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework.
+
+### AI & Cloud Services
+
+- ![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=google&logoColor=white) **[Google Gemini AI](https://deepmind.google/technologies/gemini/)** - Generative AI for interview logic.
+- 🗣️ **[Vapi](https://vapi.ai/)** - Real-time Voice AI infrastructure.
+- ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase) **[Firebase](https://firebase.google.com/)** - Auth, Firestore, and Admin SDK.
+
+### Tools & Components
+
+- **[Shadcn UI](https://ui.shadcn.com/)** - Reusable UI components.
+- **[Lucide Icons](https://lucide.dev/)** - Beautiful & consistent icons.
+- **[Firebase Auth](https://firebase.google.com/docs/auth)** - Secure User Authentication.
 
 ## Getting Started
 
