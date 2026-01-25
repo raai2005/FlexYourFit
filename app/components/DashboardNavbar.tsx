@@ -53,11 +53,12 @@ const DashboardNavbar = () => {
                 <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
               </svg>
             </div>
-            <span className="text-lg font-semibold text-white">FlexYourFit</span>
+            <span className="text-lg font-semibold text-white hidden sm:block">FlexYourFit</span>
           </Link>
         </div>
 
-        <div className="flex items-center gap-6">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-6">
           <Link 
             href="/dashboard" 
             className={`text-sm transition-colors ${pathname === '/dashboard' ? 'text-white font-bold' : 'text-zinc-400 hover:text-white'}`}
@@ -78,8 +79,8 @@ const DashboardNavbar = () => {
           </Link>
         </div>
 
-        <div className="flex items-center gap-4" ref={menuRef}>
-            <div className="relative">
+        <div className="flex items-center gap-4">
+            <div className="relative" ref={menuRef}>
                 <button 
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                   className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-800 transition-colors"
@@ -88,13 +89,38 @@ const DashboardNavbar = () => {
                 </button>
 
                 {isMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-zinc-900 border border-zinc-800 rounded-xl py-2 shadow-xl animate-in fade-in zoom-in-95 duration-200">
+                    <div className="absolute right-0 mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-xl py-2 shadow-xl animate-in fade-in zoom-in-95 duration-200">
                         <div className="px-4 py-2 border-b border-zinc-800 mb-2">
                             <p className="text-sm font-medium text-white truncate">
                                 {user?.email || "User"}
                             </p>
                         </div>
                         
+                        {/* Mobile Navigation Links */}
+                        <div className="md:hidden border-b border-zinc-800 mb-2">
+                            <Link 
+                                href="/dashboard"
+                                onClick={() => setIsMenuOpen(false)}
+                                className={`block px-4 py-2 text-sm ${pathname === '/dashboard' ? 'text-white bg-zinc-800/50' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/30'}`}
+                            >
+                                Dashboard
+                            </Link>
+                            <Link 
+                                href="/interviews"
+                                onClick={() => setIsMenuOpen(false)}
+                                className={`block px-4 py-2 text-sm ${pathname === '/interviews' ? 'text-white bg-zinc-800/50' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/30'}`}
+                            >
+                                Interviews
+                            </Link>
+                            <Link 
+                                href="/roadmap"
+                                onClick={() => setIsMenuOpen(false)}
+                                className={`block px-4 py-2 text-sm ${pathname === '/roadmap' ? 'text-white bg-zinc-800/50' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/30'}`}
+                            >
+                                Roadmap
+                            </Link>
+                        </div>
+
                         <Link 
                             href="/profile"
                             onClick={() => setIsMenuOpen(false)}

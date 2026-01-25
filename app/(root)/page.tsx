@@ -2,61 +2,27 @@ import Link from "next/link";
 import Image from "next/image";
 import heroAnimation from '../../public/assets/hero-animation.json';
 import LottieAnim from "../components/LottieAnim";
-// This acts as a placeholder for the single replace call strategy if I was using that.
+import Navbar from "@/components/Navbar";
 // But I need to use multi_replace.
 // Canceling this thought process to switch to multi_replace.
 
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-zinc-950">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800 bg-zinc-950">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-white"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-                <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
-              </svg>
-            </div>
-            <span className="text-lg font-semibold text-white">
-              FlexYourFit
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href="/sign-in"
-              className="text-sm text-zinc-400 hover:text-white transition-colors font-medium"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/sign-up"
-              className="text-sm px-4 py-2 rounded-lg bg-white text-zinc-950 font-bold hover:bg-zinc-200 transition-colors"
-            >
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-10 px-6 overflow-hidden">
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden min-h-screen flex flex-col justify-center">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
           
           {/* Left Content */}
-          <div className="flex-1 text-left z-10">
+          <div className="flex-1 text-left z-10 w-full">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900 text-zinc-400 text-sm mb-8">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               AI-Powered Mock Interviews
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
               Ace Your Next
               <br />
               <span className="text-emerald-500">Technical Interview</span>
@@ -67,16 +33,16 @@ const HomePage = () => {
               companies. Get instant feedback and improve your skills.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-start gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-start gap-4 w-full sm:w-auto">
               <Link
                 href="/sign-up"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-zinc-950 font-bold text-lg hover:bg-zinc-200 transition-all duration-200"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-zinc-950 font-bold text-lg hover:bg-zinc-200 transition-all duration-200 text-center"
               >
                 Start Practicing Free
               </Link>
               <Link
                 href="#features"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl border border-zinc-800 text-zinc-300 font-medium hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-200"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl border border-zinc-800 text-zinc-300 font-medium hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-200 text-center"
               >
                 See How It Works
               </Link>
@@ -84,9 +50,9 @@ const HomePage = () => {
           </div>
 
           {/* Right Visual */}
-          <div className="flex-1 relative w-full flex justify-center md:justify-end">
+          <div className="flex-1 relative w-full flex justify-center md:justify-end mt-10 md:mt-0">
              <div className="relative w-full max-w-lg flex items-center justify-center animate-float hover:scale-105 transition-transform duration-500">
-                <LottieAnim animationData={heroAnimation} className="w-full h-full" />
+                <LottieAnim animationData={heroAnimation} className="w-full h-auto max-h-[500px]" />
              </div>
           </div>
         </div>
