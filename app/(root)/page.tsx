@@ -11,6 +11,9 @@ import {
   Zap,
   Trophy,
   Star,
+  Github,
+  Twitter,
+  Linkedin,
 } from "lucide-react";
 // But I need to use multi_replace.
 // Canceling this thought process to switch to multi_replace.
@@ -226,7 +229,7 @@ const HomePage = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-24 px-6 bg-zinc-900 relative">
+      <section id="how-it-works" className="py-24 px-6 bg-zinc-900 relative">
         <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">How It Works</h2>
@@ -276,7 +279,7 @@ const HomePage = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 px-6 bg-zinc-950">
+      <section id="testimonials" className="py-24 px-6 bg-zinc-950">
           <div className="max-w-6xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-16">Loved by Developers</h2>
               <div className="grid md:grid-cols-3 gap-8">
@@ -328,7 +331,7 @@ const HomePage = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-24 px-6 bg-zinc-900">
+      <section id="faq" className="py-24 px-6 bg-zinc-900">
         <div className="max-w-3xl mx-auto max-h-full">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">Frequently Asked Questions</h2>
             <div className="space-y-4">
@@ -401,23 +404,77 @@ const HomePage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 bg-zinc-950 py-12 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-zinc-400"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-                <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
-              </svg>
+      <footer className="bg-zinc-950 border-t border-zinc-900 pt-16 pb-8 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+            <div className="col-span-2 lg:col-span-2">
+              <Link href="/" className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
+                    <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
+                  </svg>
+                </div>
+                <span className="text-lg font-bold text-white">FlexYourFit</span>
+              </Link>
+              <p className="text-zinc-400 text-sm leading-relaxed mb-6 max-w-xs">
+                Master your technical interviews with AI-powered mock sessions, real-time feedback, and personalized roadmaps.
+              </p>
+              <div className="flex items-center gap-4">
+                <Link href="#" className="p-2 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">
+                    <Github className="w-5 h-5" />
+                </Link>
+                <Link href="#" className="p-2 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">
+                    <Twitter className="w-5 h-5" />
+                </Link>
+                <Link href="#" className="p-2 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">
+                    <Linkedin className="w-5 h-5" />
+                </Link>
+              </div>
             </div>
-            <span className="text-sm font-semibold text-zinc-300">FlexYourFit</span>
+
+            <div>
+              <h3 className="font-semibold text-white mb-4">Product</h3>
+              <ul className="space-y-3 text-sm text-zinc-400">
+                <li><Link href="#features" className="hover:text-emerald-500 transition-colors">Features</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Pricing</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Success Stories</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Roadmap</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-white mb-4">Resources</h3>
+              <ul className="space-y-3 text-sm text-zinc-400">
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Blog</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Interview Guide</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">System Design</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Community</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-white mb-4">Company</h3>
+              <ul className="space-y-3 text-sm text-zinc-400">
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">About Us</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Careers</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Contact</Link></li>
+                <li><Link href="#" className="hover:text-emerald-500 transition-colors">Privacy Policy</Link></li>
+              </ul>
+            </div>
           </div>
-          <div className="text-sm text-zinc-500">
-            © 2026 FlexYourFit. All rights reserved.
+
+          <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-zinc-500 text-sm">© 2026 FlexYourFit. All rights reserved.</p>
+            <div className="flex gap-8 text-sm text-zinc-500">
+                <Link href="#" className="hover:text-zinc-300 transition-colors">Terms</Link>
+                <Link href="#" className="hover:text-zinc-300 transition-colors">Privacy</Link>
+                <Link href="#" className="hover:text-zinc-300 transition-colors">Cookies</Link>
+            </div>
           </div>
         </div>
       </footer>
