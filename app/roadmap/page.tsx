@@ -59,7 +59,7 @@ const RoadmapPage = () => {
                 type="text"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                placeholder="Enter your target role (e.g. Senior React Developer, DevOps Engineer)..."
+                placeholder="Enter a job role, skill, or tech stack (e.g. Full Stack Dev, Python, System Design)..."
                 className="flex-1 px-6 py-4 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-lg"
               />
               <button

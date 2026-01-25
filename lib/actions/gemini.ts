@@ -23,11 +23,21 @@ export async function generateRoadmap(role: string): Promise<{ success: boolean;
     }
 
     const prompt = `
-      Create a detailed career learning roadmap for the role: "${role}".
+      You are an expert career counselor. 
+      Your task is to generate a learning roadmap for the user's request: "${role}".
       
+      First, validate if "${role}" is a valid career role, job title, technology, skill, or technical field.
+      If it is meaningless, gibberish, offensive, or clearly not a career-related topic (e.g. "dhfjsdh", "hello", "I love you"), 
+      return this EXACT JSON response:
+      {
+        "role": "INVALID",
+        "steps": []
+      }
+
+      If valid, generate a detailed learning roadmap.
       Return the response ONLY as a VALID JSON object with the following structure:
       {
-        "role": "${role}",
+        "role": "${role}" (or a corrected, professional title, e.g. "react" -> "React Developer"),
         "steps": [
           {
             "title": "Phase Name (e.g., Fundamentals)",
@@ -37,7 +47,7 @@ export async function generateRoadmap(role: string): Promise<{ success: boolean;
         ]
       }
       
-      Requirements:
+      Requirements for the roadmap:
       - Provide 5 distinct phases (steps).
       - Be specific to the technology and skills required for "${role}".
       - Do not wrap the JSON in markdown code blocks. Just return raw JSON.
@@ -54,6 +64,10 @@ export async function generateRoadmap(role: string): Promise<{ success: boolean;
       const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
       const roadmapData: RoadmapResponse = JSON.parse(cleanText);
       
+      if (roadmapData.role === "INVALID") {
+        return { success: false, message: "Please enter a valid role, skill, or technology." };
+      }
+
       return { success: true, data: roadmapData };
     } catch (error: any) {
       console.warn(`Failed with ${modelName}:`, error.message);
