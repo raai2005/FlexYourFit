@@ -148,7 +148,7 @@ const InterviewSetupPage = () => {
 
         {/* Right Col: Webcam Check */}
         <div className="flex-1 flex flex-col items-center justify-start space-y-6">
-             <div className="relative w-full aspect-video bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center shadow-2xl">
+             <div className="relative w-full aspect-auto md:aspect-video bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center shadow-2xl min-h-[400px] md:min-h-0">
                 {hasPermissions ? (
                     <video
                         ref={videoRef}
