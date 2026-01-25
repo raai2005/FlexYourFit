@@ -56,6 +56,7 @@ const Footer = () => {
               <li><Link href="/about" className="hover:text-emerald-500 transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="hover:text-emerald-500 transition-colors">Contact</Link></li>
               <li><Link href="/privacy" className="hover:text-emerald-500 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__oMHtX5UNUI1QVFJTUJHMU4wVUlWNkJZMzZWQ0E0Ui4u" target="_blank" className="hover:text-emerald-500 transition-colors">Feedback</Link></li>
             </ul>
           </div>
         </div>
