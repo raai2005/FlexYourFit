@@ -127,30 +127,6 @@ mock_interview/
 | :----------------------------------------: | :----------------------------------------: | :--------------------------------------------: |
 | ![Landing](public/landing-placeholder.png) | ![Session](public/session-placeholder.png) | ![Dashboard](public/dashboard-placeholder.png) |
 
-> _Note: Replace these placeholders with actual screenshots of your application._
-
-## Deployment
-
-### Option 1: Vercel (Recommended) &nbsp; [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
-Vercel is the creators of Next.js and offers the seamless deployment experience.
-
-1.  Push your code to a GitHub repository.
-2.  Go to [Vercel](https://vercel.com) and sign up.
-3.  Click **"Add New..."** -> **"Project"**.
-4.  Import your GitHub repository.
-5.  **Important**: In the configuration step, expand **"Environment Variables"** and add all the variables from your `.env.local` file.
-6.  Click **"Deploy"**.
-
-### Option 2: Netlify
-
-1.  Push your code to GitHub.
-2.  Go to [Netlify](https://www.netlify.com/) and sign up.
-3.  Click **"Add new site"** -> **"Import an existing project"**.
-4.  Connect to GitHub and select your repo.
-5.  In **"Site settings"** -> **"Environment variables"**, add your keys.
-6.  Click **"Deploy"**.
-
 ## Contributing
 
 Contributions are welcome!
@@ -167,6 +143,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-**Your Name** - [LinkedIn Profile](https://linkedin.com) - email@example.com
+**Megha Roy** - [LinkedIn Profile](https://www.linkedin.com/in/megha1999r/) - roymegha952@gmail.com
 
-Project Link: [https://github.com/yourusername/mock-interview-prep](https://github.com/yourusername/mock-interview-prep)
+Project Link: [https://github.com/raai2005/FlexYourFit](https://github.com/raai2005/FlexYourFit)

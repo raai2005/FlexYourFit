@@ -8,7 +8,7 @@ import Link from "next/link";
 import { BarChart3, LayoutGrid, Plus } from "lucide-react";
 import { adminLogout } from "@/lib/actions/admin";
 
-const AdminNavbar = () => {
+const AdminNavbarContent = () => {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -89,6 +89,14 @@ const AdminNavbar = () => {
       </div>
     </nav>
   );
+};
+
+const AdminNavbar = () => {
+    return (
+        <React.Suspense fallback={<div className="h-16 bg-zinc-950/80 border-b border-zinc-800/50"></div>}>
+            <AdminNavbarContent />
+        </React.Suspense>
+    );
 };
 
 export default AdminNavbar;

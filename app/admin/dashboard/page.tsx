@@ -27,7 +27,7 @@ interface DashboardStats {
     recentInterviews: any[];
 }
 
-const AdminDashboard = () => {
+const AdminDashboardContent = () => {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -635,6 +635,14 @@ const AdminDashboard = () => {
       </div>
     </>
   );
+};
+
+const AdminDashboard = () => {
+    return (
+        <React.Suspense fallback={<div className="flex justify-center p-12"><div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <AdminDashboardContent />
+        </React.Suspense>
+    );
 };
 
 export default AdminDashboard;
