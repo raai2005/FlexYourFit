@@ -228,7 +228,7 @@ const InterviewSessionPage = () => {
     <div className="min-h-screen bg-zinc-950 flex flex-col">
       <DashboardNavbar />
 
-      <main className="flex-1 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 pt-24 pb-12">
+      <main className="flex-1 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 pt-24 pb-12 w-full">
         
         {/* Interview Header */}
         <div className="text-center mb-8">

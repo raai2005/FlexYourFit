@@ -89,7 +89,7 @@ const InterviewSetupPage = () => {
     <div className="min-h-screen bg-zinc-950 flex flex-col">
        <DashboardNavbar />
       
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 pt-24 pb-20 flex flex-col md:flex-row gap-8 md:gap-12 overflow-y-auto">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 pt-24 pb-20 flex flex-col md:flex-row gap-8 md:gap-12">
         {/* Left Col: Instructions & Info */}
         <div className="flex-1 space-y-8">
             <div>
