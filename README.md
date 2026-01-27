@@ -259,48 +259,45 @@ npm start
 ```mermaid
 graph TD
     A[User Signs In] --> B[Dashboard]
-    B --> C[Start New Interview]
-    C --> D[Enter Job Details]
-    D --> E[Configure Interview Settings]
-    E --> F[Grant Microphone Access]
-    F --> G[AI Asks Questions]
-    G --> H[User Responds Verbally]
-    H --> I{More Questions?}
-    I -->|Yes| G
-    I -->|No| J[End Interview]
-    J --> K[Generate Feedback]
-    K --> L[Display Results]
-    L --> M[Save to History]
-    M --> B
+    B -->|Select Role/Skill| C[Interview Setup]
+    C -->|Check Permissions| D[Grant Mic/Cam Access]
+    D --> E[Start Interview Session]
+    E --> F[AI Interviewer Connects]
+    F --> G{Voice Interaction}
+    G -->|AI Asks| H[User Responds Verbally]
+    H -->|Real-time Transcript| G
+    G -->|Session Complete| I[End Interview]
+    I --> J[Generating Feedback]
+    J --> K[View Detailed Report & Score]
+    K --> L[Save Results to Profile]
+    L --> B
 ```
 
 ### Interview Process
 
 1. **Setup Phase**
-   - User provides job role (e.g., "Senior React Developer")
-   - Enters job description details
-   - Specifies years of experience
-   - System generates personalized question set
+   - User selects a specific interview type (Role-Based or Skill-Based)
+   - Checks camera and microphone permissions
+   - Audio visualizer confirms input levels
+   - System prepares the AI interviewer context
 
 2. **Interview Phase**
-   - AI interviewer asks questions via voice
-   - User responds naturally
-   - Real-time transcription of both parties
-   - Visual feedback indicators (listening/speaking)
-   - Adaptive follow-up questions based on responses
+   - User connects to **Vapi** voice infrastructure
+   - AI interviewer initiates the conversation based on the selected role
+   - Real-time voice interaction with sub-second latency
+   - Live visual cues for "Listening" and "Speaking" states
 
 3. **Analysis Phase**
-   - Gemini AI analyzes complete transcript
-   - Evaluates technical accuracy
-   - Assesses communication clarity
-   - Compares against industry standards
+   - Session transcript is captured in real-time
+   - **Gemini AI** processes the full conversation context
+   - Evaluates technical accuracy and communication skills
+   - Generates a comprehensive performance report
 
 4. **Feedback Phase**
-   - Comprehensive scoring (0-100)
-   - Detailed written review
-   - Strengths identification
-   - Improvement suggestions
-   - Sample better answers provided
+   - Instant scoring (0-100) based on evaluation rubric
+   - Detailed strengths and weaknesses analysis
+   - Actionable improvement suggestions
+   - Results are saved to the user's dashboard for progress tracking
 
 ---
 
