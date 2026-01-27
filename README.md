@@ -100,9 +100,9 @@ Robust user management using Firebase Authentication supporting:
 
 Dedicated administrative interface for:
 
-- Managing interview templates
-- Configuring question banks
-- System settings and monitoring
+- **Managing Interview Templates**: Create and edit role-based or skill-based interview definitions.
+- **Syllabus Configuration**: Define specific technical topics for the AI to focus on.
+- **Platform Analytics**: Monitor total interviews, user growth, and interview type distribution.
 
 ### 📱 **Responsive Design**
 
@@ -357,10 +357,9 @@ Our mission: **Democratize interview preparation** using Generative AI, creating
 
 ### 🏆 Accomplishments
 
-- ✅ **Sub-second Response Time:** Achieved near-conversational latency that makes interactions feel natural
-- ✅ **95%+ User Satisfaction:** Based on early testing feedback
+- ✅ **Low-Latency Response Time:** Achieved conversational speeds that make interactions feel natural
 - ✅ **Hands-Free Experience:** True voice-first interface requiring no typing
-- ✅ **Industry-Specific Accuracy:** AI generates relevant questions across 50+ job roles
+- ✅ **Dynamic Context:** AI generates relevant questions tailored to any custom job role
 - ✅ **Production-Ready Architecture:** Scalable, maintainable codebase using modern best practices
 
 ### 📚 Key Learnings
