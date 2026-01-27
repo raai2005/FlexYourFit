@@ -42,6 +42,7 @@
 ### 💡 The Problem We Solve
 
 Many qualified candidates struggle with interviews not due to lack of knowledge, but because they haven't had enough practice articulating their thoughts under pressure. Traditional solutions are limited:
+
 - **Peer mock interviews**: Often lack quality feedback
 - **Professional coaches**: Expensive and not accessible to everyone
 - **Self-practice**: No real-time feedback or accountability
@@ -49,6 +50,7 @@ Many qualified candidates struggle with interviews not due to lack of knowledge,
 ### ✨ Our Solution
 
 An AI-powered platform that democratizes interview preparation by providing:
+
 - Professional-grade interview simulation
 - Real-time voice interaction
 - Comprehensive, actionable feedback
@@ -60,13 +62,17 @@ An AI-powered platform that democratizes interview preparation by providing:
 ## 🚀 Key Features
 
 ### 🤖 **Intelligent AI Interviewer**
+
 Experience realistic interview sessions powered by Google's Gemini AI, dynamically tailored to your specific job role, description, and experience level.
 
 ### 🎙️ **Natural Voice Interaction**
+
 Speak naturally with the AI interviewer through seamless speech-to-text and text-to-speech integration powered by Vapi, creating an authentic conversational experience.
 
 ### 📊 **Comprehensive Feedback System**
+
 Receive detailed post-interview analysis including:
+
 - **Overall Performance Score** (0-100 rating)
 - **Executive Summary** of your interview
 - **Strengths Analysis** highlighting what you did well
@@ -74,26 +80,34 @@ Receive detailed post-interview analysis including:
 - **Sample Answers** demonstrating better ways to respond
 
 ### 📈 **Progress Dashboard**
+
 Track your journey with:
+
 - Complete interview history
 - Score trends over time
 - Interactive performance charts
 - Improvement metrics
 
 ### 🔐 **Secure Authentication**
+
 Robust user management using Firebase Authentication supporting:
+
 - Google Sign-In
 - Email/Password authentication
 - Secure session management
 
 ### 🛠️ **Admin Panel**
+
 Dedicated administrative interface for:
+
 - Managing interview templates
 - Configuring question banks
 - System settings and monitoring
 
 ### 📱 **Responsive Design**
+
 Fully optimized experience across all devices:
+
 - Desktop workstations
 - Tablets
 - Mobile phones
@@ -103,28 +117,32 @@ Fully optimized experience across all devices:
 ## 🛠️ Technology Stack
 
 ### **Frontend**
-| Technology | Purpose |
-|------------|---------|
-| ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js) | React framework with App Router and Server Components |
-| ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react) | Component-based UI library |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-007ACC?style=flat-square&logo=typescript) | Type-safe development |
-| ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=flat-square&logo=tailwind-css) | Utility-first CSS framework |
-| ![Shadcn UI](https://img.shields.io/badge/Shadcn-UI-000000?style=flat-square) | Beautiful, accessible components |
+
+| Technology                                                                                            | Purpose                                               |
+| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)              | React framework with App Router and Server Components |
+| ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)                   | Component-based UI library                            |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-007ACC?style=flat-square&logo=typescript)   | Type-safe development                                 |
+| ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=flat-square&logo=tailwind-css) | Utility-first CSS framework                           |
+| ![Shadcn UI](https://img.shields.io/badge/Shadcn-UI-000000?style=flat-square)                         | Beautiful, accessible components                      |
 
 ### **AI & Voice**
-| Technology | Purpose |
-|------------|---------|
-| ![Google Gemini](https://img.shields.io/badge/Gemini-AI-8E75B2?style=flat-square&logo=google) | Advanced generative AI for interview logic |
-| 🗣️ **Vapi** | Real-time voice AI infrastructure (STT/TTS) |
+
+| Technology                                                                                    | Purpose                                     |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| ![Google Gemini](https://img.shields.io/badge/Gemini-AI-8E75B2?style=flat-square&logo=google) | Advanced generative AI for interview logic  |
+| 🗣️ **Vapi**                                                                                   | Real-time voice AI infrastructure (STT/TTS) |
 
 ### **Backend & Database**
-| Technology | Purpose |
-|------------|---------|
-| ![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=flat-square&logo=firebase) | Authentication, Firestore, Admin SDK |
-| ![Firestore](https://img.shields.io/badge/Firestore-Database-FFA611?style=flat-square&logo=firebase) | NoSQL cloud database |
-| **Next.js Server Actions** | Server-side business logic |
+
+| Technology                                                                                           | Purpose                              |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| ![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=flat-square&logo=firebase)            | Authentication, Firestore, Admin SDK |
+| ![Firestore](https://img.shields.io/badge/Firestore-Database-FFA611?style=flat-square&logo=firebase) | NoSQL cloud database                 |
+| **Next.js Server Actions**                                                                           | Server-side business logic           |
 
 ### **Additional Tools**
+
 - **Lucide Icons** - Consistent, beautiful iconography
 - **Recharts** - Data visualization for dashboard
 - **ESLint & Prettier** - Code quality and formatting
@@ -136,6 +154,7 @@ Fully optimized experience across all devices:
 ### Prerequisites
 
 Ensure you have the following installed:
+
 - **Node.js** v18 or later ([Download](https://nodejs.org/))
 - **npm**, **yarn**, **pnpm**, or **bun** package manager
 - **Git** for version control
@@ -143,12 +162,14 @@ Ensure you have the following installed:
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/raai2005/FlexYourFit.git
    cd FlexYourFit
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -158,20 +179,20 @@ Ensure you have the following installed:
    ```
 
 3. **Configure environment variables**
-   
+
    Create a `.env.local` file in the root directory:
-   
+
    ```env
    # ============================================
    # Google Gemini AI
    # ============================================
    GEMINI_API_KEY=your_gemini_api_key_here
-   
+
    # ============================================
    # Vapi Voice AI
    # ============================================
    NEXT_PUBLIC_VAPI_PUBLIC_KEY=your_vapi_public_key_here
-   
+
    # ============================================
    # Firebase Client Configuration
    # Get these from Firebase Console > Project Settings > General
@@ -183,7 +204,7 @@ Ensure you have the following installed:
    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
-   
+
    # ============================================
    # Firebase Admin SDK
    # Get these from Firebase Console > Project Settings > Service Accounts
@@ -191,7 +212,7 @@ Ensure you have the following installed:
    FIREBASE_PROJECT_ID=your-project-id
    FIREBASE_CLIENT_EMAIL=firebase-adminsdk@your-project.iam.gserviceaccount.com
    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour_Private_Key_Here\n-----END PRIVATE KEY-----\n"
-   
+
    # ============================================
    # Admin Access
    # ============================================
@@ -209,6 +230,7 @@ Ensure you have the following installed:
    - Get Vapi API key from [Vapi Dashboard](https://dashboard.vapi.ai/)
 
 6. **Run the development server**
+
    ```bash
    npm run dev
    # or
@@ -218,7 +240,7 @@ Ensure you have the following installed:
    ```
 
 7. **Open your browser**
-   
+
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Building for Production
@@ -226,90 +248,6 @@ Ensure you have the following installed:
 ```bash
 npm run build
 npm start
-```
-
----
-
-## 📁 Project Structure
-
-```
-FlexYourFit/
-├── 📂 app/                         # Next.js 16 App Router
-│   ├── 📂 (auth)/                  # Authentication pages
-│   │   ├── sign-in/                # Sign-in page
-│   │   └── sign-up/                # Sign-up page
-│   ├── 📂 (root)/                  # Main application
-│   │   ├── layout.tsx              # Root layout wrapper
-│   │   └── page.tsx                # Landing page
-│   ├── 📂 admin/                   # Admin dashboard
-│   │   ├── layout.tsx              # Admin layout
-│   │   └── page.tsx                # Admin controls
-│   ├── 📂 dashboard/               # User dashboard
-│   │   ├── page.tsx                # Stats & history overview
-│   │   └── components/             # Dashboard-specific components
-│   ├── 📂 interview/               # Interview flow
-│   │   ├── [id]/                   # Dynamic interview sessions
-│   │   ├── new/                    # Start new interview
-│   │   └── feedback/               # Post-interview feedback
-│   └── 📂 api/                     # API routes
-│       ├── interview/              # Interview-related endpoints
-│       └── feedback/               # Feedback generation
-│
-├── 📂 components/                  # Reusable UI components
-│   ├── 📂 ui/                      # Shadcn UI components
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── dialog.tsx
-│   │   └── ...
-│   ├── 📂 interview/               # Interview-specific components
-│   │   ├── VoiceVisualizer.tsx
-│   │   ├── QuestionDisplay.tsx
-│   │   └── TranscriptPanel.tsx
-│   ├── 📂 dashboard/               # Dashboard components
-│   │   ├── StatsCard.tsx
-│   │   ├── HistoryTable.tsx
-│   │   └── PerformanceChart.tsx
-│   └── 📂 shared/                  # Shared components
-│       ├── Header.tsx
-│       ├── Footer.tsx
-│       └── LoadingSpinner.tsx
-│
-├── 📂 lib/                         # Utility functions & helpers
-│   ├── 📂 actions/                 # Server Actions
-│   │   ├── gemini.ts               # Gemini AI integration
-│   │   ├── interview.ts            # Interview operations
-│   │   └── feedback.ts             # Feedback generation
-│   ├── utils.ts                    # Common utilities
-│   ├── constants.ts                # App constants
-│   └── validations.ts              # Schema validations
-│
-├── 📂 Firebase/                    # Firebase configuration
-│   ├── config.ts                   # Client SDK config
-│   ├── admin.ts                    # Admin SDK config
-│   └── auth.ts                     # Auth utilities
-│
-├── 📂 types/                       # TypeScript definitions
-│   ├── interview.ts                # Interview types
-│   ├── user.ts                     # User types
-│   └── feedback.ts                 # Feedback types
-│
-├── 📂 public/                      # Static assets
-│   ├── images/                     # Image files
-│   ├── icons/                      # Icon files
-│   └── ...
-│
-├── 📂 hooks/                       # Custom React hooks
-│   ├── useInterview.ts
-│   ├── useAuth.ts
-│   └── useVapi.ts
-│
-├── 📄 .env.local                   # Environment variables (gitignored)
-├── 📄 .env.example                 # Example environment file
-├── 📄 next.config.js               # Next.js configuration
-├── 📄 tailwind.config.ts           # Tailwind CSS configuration
-├── 📄 tsconfig.json                # TypeScript configuration
-├── 📄 package.json                 # Dependencies & scripts
-└── 📄 README.md                    # This file
 ```
 
 ---
@@ -377,36 +315,44 @@ Our mission: **Democratize interview preparation** using Generative AI, creating
 ### 🧩 Challenges We Overcame
 
 #### 1. **Voice AI Latency Optimization**
+
 **Challenge:** Minimizing delay between user speech and AI response to maintain natural conversation flow.
 
-**Solution:** 
+**Solution:**
+
 - Optimized Vapi configuration settings
 - Implemented efficient API call batching
 - Reduced payload sizes in Gemini requests
 - Added predictive loading for likely responses
 
 #### 2. **Advanced Prompt Engineering**
+
 **Challenge:** Training the AI to act as a strict yet helpful interviewer, not accepting vague answers while maintaining encouragement.
 
 **Solution:**
+
 - Iterative system prompt refinement
 - Context-aware follow-up question logic
 - Implemented scoring rubrics in prompts
 - Added examples of good/bad answers for calibration
 
 #### 3. **Real-Time State Management**
+
 **Challenge:** Synchronizing voice state (listening/speaking) with UI visualizers without glitches.
 
 **Solution:**
+
 - Custom React hooks for voice state
 - WebSocket-based state updates
 - Debounced UI updates to prevent flicker
 - Optimistic UI patterns for perceived speed
 
 #### 4. **Feedback Quality Consistency**
+
 **Challenge:** Ensuring AI feedback was specific, actionable, and consistently high-quality.
 
 **Solution:**
+
 - Structured output schema for feedback
 - Multi-pass analysis (initial + refinement)
 - Examples library for reference answers
@@ -490,11 +436,13 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 ### How to Contribute
 
 1. **Fork the repository**
+
    ```bash
    git clone https://github.com/raai2005/FlexYourFit.git
    ```
 
 2. **Create a feature branch**
+
    ```bash
    git checkout -b feature/AmazingFeature
    ```
@@ -505,11 +453,13 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
    - Add tests if applicable
 
 4. **Commit your changes**
+
    ```bash
    git commit -m 'Add some AmazingFeature'
    ```
 
 5. **Push to your branch**
+
    ```bash
    git push origin feature/AmazingFeature
    ```
@@ -567,6 +517,7 @@ SOFTWARE.
 ## 📞 Contact
 
 ### Megha Roy
+
 **Full-Stack Developer | AI Enthusiast**
 
 - 📧 Email: [roymegha952@gmail.com](mailto:roymegha952@gmail.com)
