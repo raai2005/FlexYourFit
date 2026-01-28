@@ -14,24 +14,27 @@ const RoadmapPage = () => {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!role.trim()) return;
+    const trimmed = role.trim();
+    // Basic validation: at least 3 chars, at least one letter, not just gibberish
+    if (!trimmed || trimmed.length < 3 || !/[a-zA-Z]/.test(trimmed)) {
+      toast.error("Please enter a valid job role, skill, or tech stack.");
+      return;
+    }
 
     setLoading(true);
     setRoadmap(null);
-    
     try {
-        const result = await generateRoadmap(role);
-        
-        if (result.success && result.data) {
-            setRoadmap(result.data);
-            toast.success("Roadmap generated successfully!");
-        } else {
-            toast.error(result.message || "Failed to generate roadmap.");
-        }
+      const result = await generateRoadmap(trimmed);
+      if (result.success && result.data) {
+        setRoadmap(result.data);
+        toast.success("Roadmap generated successfully!");
+      } else {
+        toast.error(result.message || "Failed to generate roadmap.");
+      }
     } catch (error) {
-        toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 

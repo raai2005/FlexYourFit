@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mona_Sans } from "next/font/google";
 import "./globals.css";
+import { AppToaster } from "@/app/components/ui/sonner";
 
 const monaSans = Mona_Sans({
   variable: "--font-mona-sans",
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body
         className={`${monaSans.variable} antialiased animation`}
       >
+        <AppToaster />
         {children}
       </body>
     </html>
