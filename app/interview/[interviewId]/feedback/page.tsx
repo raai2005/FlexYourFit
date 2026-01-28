@@ -305,12 +305,15 @@ const FeedbackPage = () => {
                 )}
                 
                 {isSaved && (
-                     <div className="flex justify-center mt-8">
-                         <div className="px-6 py-3 bg-zinc-900 rounded-full border border-emerald-500/30 text-emerald-500 text-sm font-medium flex items-center gap-2">
-                             <CheckCircle className="w-4 h-4" />
-                             Results saved to your dashboard
-                         </div>
-                     </div>
+                                        <div className="flex justify-center mt-8">
+                                                <a
+                                                    href="/dashboard"
+                                                    className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 rounded-full text-white text-sm font-semibold flex items-center gap-2 transition-colors border border-emerald-500/30 shadow"
+                                                >
+                                                    <CheckCircle className="w-4 h-4" />
+                                                    Go To Dashboard
+                                                </a>
+                                        </div>
                 )}
 
             </div>
