@@ -131,7 +131,7 @@
 }
 
 .auth-card {
-  @apply w-full max-w-3xl p-12 rounded-3xl;
+  @apply w-full max-w-2xl min-w-[500px] p-12 rounded-3xl;
   @apply bg-zinc-900/60 border border-zinc-800;
   @apply backdrop-blur-xl;
   @apply transition-all duration-300 ease-out;
