@@ -140,7 +140,9 @@ export async function trackInterviewStart(interviewId: string, userId: string) {
                         id: interviewId, // Use interviewId as doc ID
                         interviewId: interviewId,
                         interviewTitle: interviewData.title || "Unknown Interview",
+                        description: interviewData.description || "",
                         category: interviewData.category || "General",
+                        type: interviewData.type || "role",
                         difficulty: interviewData.difficulty || "Medium",
                         startedAt: new Date().toISOString(),
                         status: "started",
@@ -258,10 +260,38 @@ export async function getUserPastInterviews(userId: string) {
             return [];
         }
 
-        return snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        // Fetch interview details from main collection to get description
+        const sessionsWithDetails = await Promise.all(
+            snapshot.docs.map(async (doc) => {
+                const sessionData = doc.data();
+                const interviewId = sessionData.interviewId;
+                
+                // Fetch interview details if description is missing
+                if (!sessionData.description && interviewId) {
+                    try {
+                        const interviewDoc = await db.collection("interviews").doc(interviewId).get();
+                        if (interviewDoc.exists) {
+                            const interviewData = interviewDoc.data();
+                            return {
+                                id: doc.id,
+                                ...sessionData,
+                                description: interviewData?.description || "",
+                                type: sessionData.type || interviewData?.type || "role",
+                            };
+                        }
+                    } catch (err) {
+                        console.error("Error fetching interview details:", err);
+                    }
+                }
+                
+                return {
+                    id: doc.id,
+                    ...sessionData
+                };
+            })
+        );
+
+        return sessionsWithDetails;
     } catch (error) {
         console.error("Error fetching past interviews:", error);
         return [];
