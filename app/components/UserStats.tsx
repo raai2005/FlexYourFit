@@ -18,10 +18,10 @@ const UserStats = () => {
         } catch (error) {
           console.error("Error fetching user stats:", error);
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
       } else {
-        setLoading(false);
+          setLoading(false);
       }
     });
 
@@ -29,25 +29,27 @@ const UserStats = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center gap-3 animate-pulse">
-        <div className="surface-card px-4 py-2 w-28 h-[68px]" />
-        <div className="surface-card px-4 py-2 w-28 h-[68px]" />
-      </div>
-    );
+      return (
+        <div className="flex items-center gap-4 animate-pulse">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center w-24 h-16"></div>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center w-24 h-16"></div>
+        </div>
+      )
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="surface-card px-5 py-3 text-center min-w-[112px]">
-        <div className="text-2xl font-bold text-fg">{completedCount}</div>
-        <div className="text-xs text-fg-subtle mt-0.5">Completed</div>
-      </div>
-      <div className="surface-card px-5 py-3 text-center min-w-[112px]">
-        <div className="text-2xl font-bold text-success-bright">
-          {completedCount > 0 ? "85%" : "0%"}
+    <div className="flex items-center gap-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center min-w-[100px]">
+        <div className="text-2xl font-bold text-white transition-all duration-500">
+            {completedCount}
         </div>
-        <div className="text-xs text-fg-subtle mt-0.5">Avg Score</div>
+        <div className="text-xs text-zinc-500">Completed</div>
+      </div>
+      <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-center min-w-[100px]">
+        <div className="text-2xl font-bold text-emerald-500">
+            {completedCount > 0 ? "85%" : "0%"}
+        </div>
+        <div className="text-xs text-zinc-500">Avg Score</div>
       </div>
     </div>
   );

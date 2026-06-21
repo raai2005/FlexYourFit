@@ -29,7 +29,7 @@ const InterviewSessionPage = () => {
   const [hasPermissions, setHasPermissions] = useState(false);
   const startTimeRef = useRef<number | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [transcript, setTranscript] = useState<{ role: string; content: string }[]>([]);
+  const [transcript, setTranscript] = useState<{role: string; content: string}[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
@@ -55,10 +55,10 @@ const InterviewSessionPage = () => {
     if (params.interviewId) {
       fetchInterview();
     } else {
-      console.warn("Interview ID missing in params");
-      setIsLoading(false);
-      toast.error("Invalid Session ID");
-      router.push("/dashboard");
+        console.warn("Interview ID missing in params");
+        setIsLoading(false);
+        toast.error("Invalid Session ID");
+        router.push("/dashboard");
     }
   }, [params.interviewId, router]);
 
@@ -102,17 +102,16 @@ const InterviewSessionPage = () => {
   const startInterview = useCallback(async () => {
     if (!interview) return;
     if (!hasPermissions) {
-      toast.error("Please enable camera/microphone first");
-      return;
+        toast.error("Please enable camera/microphone first");
+        return;
     }
 
     setCallStatus("connecting");
 
     try {
-      const jobRoleVariables =
-        interview.type === "role"
-          ? `${interview.title} Role`
-          : `${interview.title} Assessment`;
+      const jobRoleVariables = interview.type === "role" 
+        ? `${interview.title} Role` 
+        : `${interview.title} Assessment`;
 
       await vapi.start(process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID!, {
         variableValues: {
@@ -124,14 +123,15 @@ const InterviewSessionPage = () => {
       });
       setCallStatus("active");
       startTimeRef.current = Date.now();
-
+      
       if (interview.id) {
-        const userId = auth.currentUser?.uid || "";
-        const result = await trackInterviewStart(interview.id, userId);
-        if (result && result.sessionId) {
-          setSessionId(result.sessionId);
-        }
+          const userId = auth.currentUser?.uid || "";
+          const result = await trackInterviewStart(interview.id, userId);
+          if (result && result.sessionId) {
+              setSessionId(result.sessionId);
+          }
       }
+
     } catch (error) {
       console.error("Error starting Vapi call:", error);
       toast.error("Failed to start AI Interviewer");
@@ -149,22 +149,19 @@ const InterviewSessionPage = () => {
 
     const onSpeechStart = () => setIsSpeaking(true);
     const onSpeechEnd = () => setIsSpeaking(false);
-
+    
     // Capture transcripts
     const onMessage = (message: any) => {
-      if (message.type === "transcript" && message.transcriptType === "final") {
-        setTranscript((prev) => [
-          ...prev,
-          {
-            role: message.role, // 'user' or 'assistant'
-            content: message.transcript,
-          },
-        ]);
-      }
+        if (message.type === "transcript" && message.transcriptType === "final") {
+            setTranscript(prev => [...prev, {
+                role: message.role, // 'user' or 'assistant'
+                content: message.transcript
+            }]);
+        }
     };
 
     const onError = (e: any) => {
-      console.error("Vapi Error:", e);
+        console.error("Vapi Error:", e);
     };
 
     vapi.on("call-end", onCallEnd);
@@ -179,8 +176,9 @@ const InterviewSessionPage = () => {
       vapi.off("speech-end", onSpeechEnd);
       vapi.off("message", onMessage);
       vapi.off("error", onError);
+      // vapi.stop(); // Only stop explicitly if needed, but here we just want to detach listeners. cleanupAndSave handles stopping.
     };
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []); // Empty dependency array ensures this runs only once on mount  
 
   const toggleMute = () => {
     const newMutedState = !isMuted;
@@ -196,15 +194,15 @@ const InterviewSessionPage = () => {
     }
 
     setIsSaving(true);
-
+    
     // 2. Save
     if (sessionId && interview) {
-      const userId = auth.currentUser?.uid || "";
-
-      // Just save the transcript and mark as completed.
-      // Feedback generation happens on the next page.
-      await completeInterviewSession(userId, sessionId, transcript);
-      toast.success("Interview completed!");
+        const userId = auth.currentUser?.uid || "";
+        
+        // Just save the transcript and mark as completed.
+        // Feedback generation happens on the next page.
+        await completeInterviewSession(userId, sessionId, transcript);
+        toast.success("Interview completed!");
     }
 
     setIsSaving(false);
@@ -218,8 +216,8 @@ const InterviewSessionPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-brand-bright animate-spin" />
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
       </div>
     );
   }
@@ -227,77 +225,60 @@ const InterviewSessionPage = () => {
   if (!interview) return null;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-zinc-950 flex flex-col">
       <DashboardNavbar />
 
       <main className="flex-1 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 pt-20 md:pt-24 pb-24 md:pb-12 w-full">
+        
         {/* Interview Header */}
         <div className="text-center mb-4 md:mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-2 border border-line text-xs text-fg-muted font-medium mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs text-zinc-400 font-medium mb-2">
             <span>{interview.category}</span>
             <span>•</span>
             <span>{interview.duration}</span>
           </div>
-          <h1 className="text-xl md:text-2xl font-bold text-fg">{interview.title} Interview</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-white">
+            {interview.title} Interview
+          </h1>
         </div>
 
         {/* Main Interview Grid */}
         <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-8">
           {/* AI Interviewer */}
-          <div className="relative aspect-video bg-surface rounded-2xl border border-line overflow-hidden flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/8 to-violet-500/10" />
-
+          <div className="relative aspect-video bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl border border-zinc-700 overflow-hidden flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/10" />
+            
             {/* AI Avatar */}
             <div className="relative z-10 flex flex-col items-center gap-4">
-              <div
-                className={`relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 grid place-items-center shadow-[0_18px_50px_-12px_rgba(99,102,241,0.6)] ${
-                  callStatus === "active" && isSpeaking ? "animate-pulse scale-110" : ""
-                } transition-transform duration-300`}
-              >
-                <div className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-surface grid place-items-center">
-                  <Volume2
-                    className={`w-8 h-8 md:w-12 md:h-12 ${
-                      callStatus === "active" ? "text-brand-bright" : "text-fg-subtle"
-                    }`}
-                  />
+              <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 flex items-center justify-center shadow-2xl ${callStatus === 'active' && isSpeaking ? 'animate-pulse scale-110' : ''} transition-transform duration-300`}>
+                <div className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-zinc-900 flex items-center justify-center">
+                  <Volume2 className={`w-8 h-8 md:w-12 md:h-12 ${callStatus === 'active' ? 'text-emerald-400' : 'text-zinc-500'}`} />
                 </div>
                 {/* Speaking Indicator Ring */}
-                {callStatus === "active" && isSpeaking && (
-                  <div className="absolute -inset-2 border-2 border-brand rounded-full animate-ping opacity-50" />
+                {callStatus === 'active' && isSpeaking && (
+                  <div className="absolute -inset-2 border-2 border-emerald-400 rounded-full animate-ping opacity-50" />
                 )}
               </div>
               <div className="text-center">
-                <h3 className="text-base md:text-lg font-semibold text-fg">AI Interviewer</h3>
-                <p
-                  className={`text-xs md:text-sm ${
-                    callStatus === "active"
-                      ? isSpeaking
-                        ? "text-brand-bright"
-                        : "text-fg-muted"
-                      : "text-fg-subtle"
-                  }`}
-                >
-                  {callStatus === "idle" && "Ready to start"}
-                  {callStatus === "connecting" && "Connecting..."}
-                  {callStatus === "active" && (isSpeaking ? "Speaking..." : "Listening...")}
-                  {callStatus === "ended" && "Call ended"}
+                <h3 className="text-base md:text-lg font-semibold text-white">AI Interviewer</h3>
+                <p className={`text-xs md:text-sm ${callStatus === 'active' ? (isSpeaking ? 'text-emerald-400' : 'text-zinc-400') : 'text-zinc-500'}`}>
+                  {callStatus === 'idle' && 'Ready to start'}
+                  {callStatus === 'connecting' && 'Connecting...'}
+                  {callStatus === 'active' && (isSpeaking ? 'Speaking...' : 'Listening...')}
+                  {callStatus === 'ended' && 'Call ended'}
                 </p>
               </div>
             </div>
 
             {/* Status Badge */}
-            <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 text-xs font-medium text-white flex items-center gap-2">
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  callStatus === "active" ? "bg-emerald-400 animate-pulse" : "bg-zinc-500"
-                }`}
-              />
-              {callStatus === "active" ? "Live" : "Standby"}
+            <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur text-xs font-medium text-white flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${callStatus === 'active' ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-500'}`} />
+              {callStatus === 'active' ? 'Live' : 'Standby'}
             </div>
           </div>
 
           {/* User Video */}
-          <div className="relative aspect-video bg-surface rounded-2xl border border-line overflow-hidden">
+          <div className="relative aspect-video bg-zinc-900 rounded-2xl border border-zinc-700 overflow-hidden">
             <video
               ref={videoRef}
               autoPlay
@@ -305,25 +286,25 @@ const InterviewSessionPage = () => {
               muted
               className="w-full h-full object-cover transform scale-x-[-1]"
             />
-
+            
             {/* No Video Fallback */}
             {!stream && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-surface">
-                <div className="w-20 h-20 rounded-full bg-surface-2 grid place-items-center mb-4 border border-line">
-                  <User className="w-10 h-10 text-fg-subtle" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900">
+                <div className="w-20 h-20 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+                  <User className="w-10 h-10 text-zinc-500" />
                 </div>
-                <p className="text-fg-subtle text-sm">Camera not available</p>
+                <p className="text-zinc-500 text-sm">Camera not available</p>
               </div>
             )}
 
             {/* User Label */}
-            <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 text-xs font-medium text-white">
+            <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur text-xs font-medium text-white">
               You
             </div>
 
             {/* Mute Indicator */}
             {isMuted && (
-              <div className="absolute top-4 right-4 px-2 py-1 rounded-full bg-red-500/80 text-xs font-medium text-white flex items-center gap-1">
+              <div className="absolute top-4 right-4 px-2 py-1 rounded-full bg-red-500/80 backdrop-blur text-xs font-medium text-white flex items-center gap-1">
                 <MicOff className="w-3 h-3" />
                 Muted
               </div>
@@ -331,44 +312,50 @@ const InterviewSessionPage = () => {
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:static md:translate-x-0 flex items-center gap-4 bg-surface md:bg-transparent p-4 md:p-0 rounded-2xl border border-line md:border-none shadow-[var(--shadow-lg)] md:shadow-none">
-          {callStatus === "idle" && (
-            <button onClick={startInterview} className="btn btn-primary h-14 px-8 text-lg">
+        {/* Controls - Fixed at bottom for mobile, flow for desktop */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:static md:translate-x-0 flex items-center gap-4 bg-zinc-950/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-4 md:p-0 rounded-2xl border border-zinc-800 md:border-none shadow-2xl md:shadow-none">
+          {callStatus === 'idle' && (
+            <button
+              onClick={startInterview}
+              className="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-lg transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/20 whitespace-nowrap"
+            >
               Start Interview Now
             </button>
           )}
 
-          {callStatus === "connecting" && (
-            <div className="flex items-center gap-3 px-8 h-14 bg-surface-2 rounded-2xl whitespace-nowrap border border-line">
-              <Loader2 className="w-5 h-5 text-brand-bright animate-spin" />
-              <span className="text-fg font-medium">Connecting...</span>
+          {callStatus === 'connecting' && (
+            <div className="flex items-center gap-3 px-8 py-4 bg-zinc-800 rounded-2xl whitespace-nowrap">
+              <Loader2 className="w-5 h-5 text-emerald-500 animate-spin" />
+              <span className="text-white font-medium">Connecting...</span>
             </div>
           )}
 
-          {callStatus === "active" && (
+          {callStatus === 'active' && (
             <>
               <button
                 onClick={toggleMute}
                 className={`w-14 h-14 rounded-full flex items-center justify-center border transition-all ${
-                  isMuted
-                    ? "bg-red-500/20 border-red-500 text-red-400"
-                    : "bg-surface-2 border-line-strong text-fg hover:bg-surface-3"
+                  isMuted 
+                    ? "bg-red-500/20 border-red-500 text-red-500" 
+                    : "bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700"
                 }`}
               >
                 {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
               </button>
               <button
                 onClick={endCall}
-                className="w-14 h-14 rounded-full flex items-center justify-center bg-red-500 hover:bg-red-600 text-white shadow-[0_10px_32px_-10px_rgba(220,38,38,0.55)] transition-all"
+                className="w-14 h-14 rounded-full flex items-center justify-center bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 transition-all"
               >
                 <PhoneOff className="w-6 h-6" />
               </button>
             </>
           )}
 
-          {callStatus === "ended" && (
-            <button onClick={cleanupAndSave} className="btn btn-danger h-14 px-8 text-lg">
+          {callStatus === 'ended' && (
+            <button
+              onClick={cleanupAndSave}
+              className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl text-lg transition-all flex items-center gap-2 shadow-lg shadow-red-500/20 whitespace-nowrap"
+            >
               <PhoneOff className="w-5 h-5" />
               End / Leave
             </button>
@@ -377,14 +364,12 @@ const InterviewSessionPage = () => {
 
         {/* Saving Modal */}
         {isSaving && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-            <div className="surface-card p-8 flex flex-col items-center gap-4 max-w-sm w-full mx-4">
-              <Loader2 className="w-12 h-12 text-brand-bright animate-spin" />
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center gap-4 max-w-sm w-full mx-4 shadow-2xl">
+              <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-fg mb-2">Saving Data</h3>
-                <p className="text-fg-muted">
-                  Please wait while we save your interview details and transcripts...
-                </p>
+                <h3 className="text-xl font-semibold text-white mb-2">Saving Data</h3>
+                <p className="text-zinc-400">Please wait while we save your interview details and transcripts...</p>
               </div>
             </div>
           </div>
@@ -392,20 +377,20 @@ const InterviewSessionPage = () => {
 
         {/* Completion Modal */}
         {isCompleted && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-            <div className="surface-card p-8 flex flex-col items-center gap-6 max-w-md w-full mx-4">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 grid place-items-center">
-                <CheckCircle className="w-8 h-8 text-emerald-400" />
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center gap-6 max-w-md w-full mx-4 shadow-2xl">
+              <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-emerald-500" />
               </div>
               <div className="text-center">
-                <h3 className="text-2xl font-bold text-fg mb-2">Interview Completed!</h3>
-                <p className="text-fg-muted">
+                <h3 className="text-2xl font-bold text-white mb-2">Interview Completed!</h3>
+                <p className="text-zinc-400">
                   Your interview has been recorded. Click below to view your score and AI feedback.
                 </p>
               </div>
               <button
                 onClick={() => router.push(`/interview/${params.interviewId}/feedback`)}
-                className="btn btn-primary w-full h-12"
+                className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-emerald-500/20"
               >
                 View Feedback with Score
               </button>
