@@ -3,7 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   THEME TOKEN MAP  (Indigo Ink — premium dark design system)
+   ============================================================ */
 @theme inline {
+  --font-sans: var(--font-mona-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -11,6 +17,8 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* shadcn semantic surface map */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -29,140 +37,395 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* bespoke design-system tokens */
+  --color-ink: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-bright: var(--brand-bright);
+  --color-brand-soft: var(--brand-soft);
+  --color-success: var(--success);
+  --color-success-bright: var(--success-bright);
+  --color-warning: var(--warning);
+  --color-warning-bright: var(--warning-bright);
+  --color-danger: var(--danger);
+  --color-danger-bright: var(--danger-bright);
 }
 
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
+/* ============================================================
+   TOKENS — dark is the source of truth (app is dark-only)
+   ============================================================ */
+:root,
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --radius: 0.75rem;
+
+  /* Cool-slate "ink" neutrals */
+  --background: #08090e;
+  --surface: #111320;
+  --surface-2: #181b29;
+  --surface-3: #222637;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
+
+  --fg: #f2f3f8;
+  --fg-muted: #99a0b4;
+  --fg-subtle: #656c7e;
+
+  /* Brand — Indigo */
+  --brand: #6366f1;
+  --brand-strong: #4f46e5;
+  --brand-bright: #a5b4fc;
+  --brand-soft: rgba(99, 102, 241, 0.13);
+
+  /* Semantic */
+  --success: #10b981;
+  --success-bright: #34d399;
+  --warning: #f59e0b;
+  --warning-bright: #fbbf24;
+  --danger: #ef4444;
+  --danger-bright: #f87171;
+
+  /* shadcn semantic mapping */
+  --foreground: var(--fg);
+  --card: var(--surface);
+  --card-foreground: var(--fg);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--fg);
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--fg);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--surface-2);
+  --accent-foreground: var(--fg);
+  --destructive: var(--danger);
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--brand);
+
+  /* Elevation — crafted shadows (no glass blur) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px -6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 60px -16px rgba(0, 0, 0, 0.7);
+  --shadow-brand: 0 10px 32px -10px rgba(79, 70, 229, 0.55);
+  --highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
+/* ============================================================
+   BASE
+   ============================================================ */
 @layer base {
+  * {
+    border-color: var(--line);
+  }
   html {
     scroll-behavior: smooth;
-  }
-  * {
-    @apply border-border outline-ring/50;
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: rgba(99, 102, 241, 0.35);
+    color: #fff;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  /* Refined scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-3) transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb {
+    background: var(--surface-3);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+  body::-webkit-scrollbar-thumb:hover {
+    background: #303649;
+    background-clip: content-box;
   }
 }
 
-/* Auth Layout Styles */
-.auth-layout {
-  @apply min-h-screen bg-zinc-950 relative;
+/* ============================================================
+   COMPONENTS  (utilities can override these — that's intended)
+   ============================================================ */
+@layer components {
+  /* Surfaces */
+  .surface {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .surface-card {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md), var(--highlight);
+  }
+  .surface-card-interactive {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  }
+  .surface-card-interactive:hover {
+    transform: translateY(-3px);
+    border-color: var(--line-strong);
+    background-color: var(--surface-2);
+    box-shadow: var(--shadow-lg), var(--highlight);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    transition: transform 0.2s ease, filter 0.2s ease, background-color 0.2s ease,
+      border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  .btn-primary {
+    background-image: linear-gradient(180deg, #6f72f5, var(--brand-strong));
+    color: #fff;
+    box-shadow: var(--shadow-brand), var(--highlight);
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+  }
+  .btn-secondary {
+    background-color: var(--surface-2);
+    color: var(--fg);
+    border: 1px solid var(--line-strong);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--surface-3);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--fg-muted);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--surface-2);
+    color: var(--fg);
+  }
+  .btn-danger {
+    background-image: linear-gradient(180deg, #f25555, #dc2626);
+    color: #fff;
+    box-shadow: 0 10px 32px -10px rgba(220, 38, 38, 0.55), var(--highlight);
+  }
+  .btn-danger:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.07);
+  }
+
+  /* Form fields */
+  .field {
+    width: 100%;
+    height: 2.875rem;
+    border-radius: 0.75rem;
+    background-color: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--fg);
+    padding: 0 0.95rem;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .field::placeholder {
+    color: var(--fg-subtle);
+  }
+  .field:hover {
+    border-color: var(--line-strong);
+  }
+  .field:focus,
+  .field:focus-visible {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-soft);
+    background-color: var(--surface);
+  }
+  textarea.field {
+    height: auto;
+    padding: 0.75rem 0.95rem;
+    resize: none;
+    line-height: 1.5;
+  }
+  select.field {
+    appearance: none;
+    cursor: pointer;
+  }
+
+  /* Chips / badges */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border: 1px solid var(--line-strong);
+    background-color: var(--surface-2);
+    color: var(--fg-muted);
+  }
+  .chip-brand {
+    border-color: rgba(99, 102, 241, 0.3);
+    background-color: var(--brand-soft);
+    color: var(--brand-bright);
+  }
+
+  /* Auth (solid — replaces former glass card) */
+  .auth-layout {
+    min-height: 100vh;
+    background-color: var(--background);
+    position: relative;
+  }
+  .auth-card {
+    width: 100%;
+    max-width: 30rem;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg), var(--highlight);
+  }
+  .auth-input {
+    width: 100%;
+    height: 2.875rem;
+    border-radius: 0.75rem;
+    background-color: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--fg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .auth-input::placeholder {
+    color: var(--fg-subtle);
+  }
+  .auth-input:hover {
+    border-color: var(--line-strong);
+  }
+  .auth-input:focus,
+  .auth-input:focus-visible {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-soft);
+    background-color: var(--surface);
+  }
 }
 
-.auth-card {
-  @apply w-full max-w-2xl min-w-[500px] p-12 rounded-3xl;
-  @apply bg-zinc-900/60 border border-zinc-800;
-  @apply backdrop-blur-xl;
-  @apply transition-all duration-300 ease-out;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 20px 40px -15px rgba(0, 0, 0, 0.6);
-  transform: translateY(0);
+/* ============================================================
+   UTILITIES (decorative)
+   ============================================================ */
+@layer utilities {
+  .text-gradient-brand {
+    background-image: linear-gradient(100deg, #a5b4fc, #818cf8 40%, #c4b5fd);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-grid {
+    background-image: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.04) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .bg-grid-fade {
+    -webkit-mask-image: radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      #000 30%,
+      transparent 75%
+    );
+    mask-image: radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      #000 30%,
+      transparent 75%
+    );
+  }
+  .glow-brand {
+    background: radial-gradient(
+      circle at center,
+      rgba(99, 102, 241, 0.5),
+      transparent 65%
+    );
+    filter: blur(60px);
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--line-strong),
+      transparent
+    );
+  }
+  .animation {
+    animation: fadeIn 0.5s ease-out;
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-shimmer {
+    animation: shimmer 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  .animate-pulse-slow {
+    animation: pulse-slow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
 }
 
-.auth-card:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 30px 60px -20px rgba(0, 0, 0, 0.7);
-}
-
-.auth-input {
-  @apply h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder-zinc-500;
-  @apply focus:border-zinc-600 focus:ring-zinc-600/20;
-  @apply transition-all duration-200;
-}
-
-.auth-input:hover {
-  @apply border-zinc-700;
-}
-
-/* Animation */
-.animation {
-  animation: fadeIn 0.5s ease-out;
-}
-
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -173,19 +436,15 @@
     transform: translateY(0);
   }
 }
-
 @keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
+  0%,
   100% {
     transform: translateY(0px);
   }
+  50% {
+    transform: translateY(-18px);
+  }
 }
-
 @keyframes shimmer {
   0% {
     transform: translateX(-150%) skewX(-15deg);
@@ -195,23 +454,14 @@
     transform: translateX(150%) skewX(-15deg);
   }
 }
-
 @keyframes pulse-slow {
   0%,
   100% {
-    opacity: 0.1;
+    opacity: 0.12;
     transform: scale(1);
   }
   50% {
-    opacity: 0.3;
+    opacity: 0.32;
     transform: scale(1.1);
   }
-}
-
-.animate-shimmer {
-  animation: shimmer 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

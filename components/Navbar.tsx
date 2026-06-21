@@ -1,103 +1,101 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "#features", label: "Features" },
+  { href: "#how-it-works", label: "How it Works" },
+  { href: "#testimonials", label: "Testimonials" },
+  { href: "#faq", label: "FAQ" },
+];
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    setIsMenuOpen(false);
+    if (href.startsWith("#")) {
+      const el = document.querySelector(href);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.history.replaceState(null, "", href);
+      }
+    }
+  };
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md"
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+        scrolled || isMenuOpen
+          ? "bg-background border-b border-line shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
+          : "bg-transparent border-b border-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-            <svg
-              className="w-5 h-5 text-white"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-[0_6px_20px_-6px_rgba(99,102,241,0.6)] group-hover:scale-105 transition-transform">
+            <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-              <path
-                d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"
-                opacity="0.7"
-              />
+              <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" opacity="0.7" />
             </svg>
           </div>
-          <span className="text-lg font-semibold text-white">FlexYourFit</span>
-        </div>
+          <span className="text-lg font-bold tracking-tight text-fg">FlexYourFit</span>
+        </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link
-            href="/"
-            className="text-sm font-medium text-zinc-400 hover:text-emerald-500 transition-colors"
-          >
-            Home
-          </Link>
-          <Link
-            href="#features"
-            className="text-sm font-medium text-zinc-400 hover:text-emerald-500 transition-colors"
-          >
-            Features
-          </Link>
-          <Link
-            href="#how-it-works"
-            className="text-sm font-medium text-zinc-400 hover:text-emerald-500 transition-colors"
-          >
-            How it Works
-          </Link>
-          <Link
-            href="#testimonials"
-            className="text-sm font-medium text-zinc-400 hover:text-emerald-500 transition-colors"
-          >
-            Testimonials
-          </Link>
-          <Link
-            href="#faq"
-            className="text-sm font-medium text-zinc-400 hover:text-emerald-500 transition-colors"
-          >
-            FAQ
-          </Link>
+        <div className="hidden md:flex items-center gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
+              className="text-sm font-medium text-fg-muted hover:text-fg px-3 py-2 rounded-lg hover:bg-surface-2 transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
 
-          <div className="h-6 w-px bg-zinc-800 mx-2"></div>
+          <div className="h-5 w-px bg-line-strong mx-3" />
 
           <Link
             href="/sign-in"
-            className="text-sm text-zinc-400 hover:text-white transition-colors font-medium"
+            className="text-sm font-medium text-fg-muted hover:text-fg px-3 py-2 transition-colors"
           >
             Sign in
           </Link>
-          <Link
-            href="/sign-up"
-            className="text-sm px-4 py-2 rounded-lg bg-white text-zinc-950 font-bold hover:bg-zinc-200 transition-colors"
-          >
+          <Link href="/sign-up" className="btn btn-primary text-sm h-10 ml-1">
             Get Started
           </Link>
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-zinc-400 hover:text-white transition-colors p-2"
-          >
-            {isMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="md:hidden text-fg-muted hover:text-fg transition-colors p-2 -mr-2"
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </div>
-
-
 
       {/* Mobile Dropdown */}
       <AnimatePresence>
@@ -106,56 +104,31 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden border-t border-zinc-800 bg-zinc-950 overflow-hidden"
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="md:hidden border-t border-line bg-background overflow-hidden"
           >
-            <div className="flex flex-col p-4 space-y-4">
-              <Link
-                href="/"
-                className="text-base text-zinc-400 hover:text-white transition-colors font-medium px-2 py-1"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="#features"
-                className="text-base text-zinc-400 hover:text-white transition-colors font-medium px-2 py-1"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Features
-              </Link>
-              <Link
-                href="#how-it-works"
-                className="text-base text-zinc-400 hover:text-white transition-colors font-medium px-2 py-1"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                How it Works
-              </Link>
-              <Link
-                href="#testimonials"
-                className="text-base text-zinc-400 hover:text-white transition-colors font-medium px-2 py-1"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Testimonials
-              </Link>
-              <Link
-                href="#faq"
-                className="text-base text-zinc-400 hover:text-white transition-colors font-medium px-2 py-1"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                FAQ
-              </Link>
-              <div className="h-px bg-zinc-800 my-2"></div>
+            <div className="flex flex-col p-4 gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="text-base text-fg-muted hover:text-fg hover:bg-surface-2 transition-colors font-medium px-3 py-2.5 rounded-lg"
+                  onClick={(e) => handleNavClick(e, link.href)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <div className="divider my-2" />
               <Link
                 href="/sign-in"
-                className="text-base text-zinc-400 hover:text-white transition-colors font-medium px-2 py-1"
+                className="text-base text-fg-muted hover:text-fg transition-colors font-medium px-3 py-2.5"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sign in
               </Link>
               <Link
                 href="/sign-up"
-                className="text-base text-center px-4 py-3 rounded-lg bg-white text-zinc-950 font-bold hover:bg-zinc-200 transition-colors"
+                className="btn btn-primary text-base h-12 mt-1"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Get Started

@@ -2,10 +2,9 @@
 
 import React, { useState } from "react";
 import { verifyAdminCredentials } from "@/lib/actions/admin";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/Firebase/client";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
+import { ShieldCheck } from "lucide-react";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -24,49 +23,50 @@ const AdminLogin = () => {
     const result = await verifyAdminCredentials(formData);
 
     if (result.success) {
-        toast.success("Admin logged in successfully");
-        router.push("/admin/dashboard");
-        setLoading(false);
-        return;
-    } 
-    
+      toast.success("Admin logged in successfully");
+      router.push("/admin/dashboard");
+      setLoading(false);
+      return;
+    }
+
     toast.error(result.message);
     setLoading(false);
   };
 
-
   return (
     <div className="flex min-h-[80vh] items-center justify-center">
-      <div className="w-full max-w-md p-8 bg-zinc-900 rounded-2xl border border-zinc-800 shadow-xl">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">Admin Access</h1>
+      <div className="w-full max-w-md p-8 surface-card">
+        <div className="flex flex-col items-center mb-6">
+          <div className="grid place-items-center w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 mb-4 shadow-[0_10px_30px_-8px_rgba(239,68,68,0.6)]">
+            <ShieldCheck className="w-7 h-7 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-fg text-center">Admin Access</h1>
+          <p className="text-fg-subtle text-sm mt-1">Authorized personnel only</p>
+        </div>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Email</label>
+            <label className="block text-sm font-medium text-fg-muted mb-1.5">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-500 transition-colors"
+              className="field"
               placeholder="admin@example.com"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Password</label>
+            <label className="block text-sm font-medium text-fg-muted mb-1.5">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-500 transition-colors"
+              className="field"
               placeholder="••••••••"
               required
             />
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <button type="submit" disabled={loading} className="btn btn-danger w-full h-11 mt-2">
             {loading ? "Verifying..." : "Access Portal"}
           </button>
         </form>
